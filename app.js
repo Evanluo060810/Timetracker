@@ -4,9 +4,128 @@
  * 支持直接通过file://协议打开，无需服务器环境
  */
 
-// 全局应用对象
+// 国际化文本 - Evan水印
+const i18n = {
+    zh: {
+        appTitle: "时间跟踪器 Pro",
+        appSubtitle: "高效管理你的每一分钟",
+        exportBtnText: "导出数据",
+        addRecordBtnText: "添加时间记录",
+        todayRecordsTitle: "今日时间记录",
+        totalTimeLabel: "今日总计时间：",
+        remainingTimeLabel: "剩余清醒时间：",
+        categoriesTitle: "类别管理",
+        addCategoryBtnText: "添加新类别",
+        timeDistributionTitle: "时间分配",
+        rangeDayText: "今日",
+        rangeWeekText: "本周",
+        rangeMonthText: "本月",
+        trendAnalysisTitle: "趋势分析",
+        trendWeekText: "本周",
+        trendMonthText: "本月",
+        trendAllText: "全部",
+        goalTrackingTitle: "目标追踪",
+        addGoalBtnText: "添加目标",
+        addRecordModalTitle: "添加时间记录",
+        recordNameLabel: "事项名称",
+        categoryLabel: "所属类别",
+        durationLabel: "时长",
+        hoursText: "小时",
+        minutesText: "分钟",
+        dateLabel: "日期",
+        notesLabel: "备注（可选）",
+        cancelText: "取消",
+        saveText: "保存记录",
+        addCategoryModalTitle: "添加新类别",
+        categoryNameLabel: "类别名称",
+        selectColorLabel: "选择颜色",
+        selectIconLabel: "选择图标",
+        cancelText2: "取消",
+        saveCategoryText: "保存类别",
+        addGoalModalTitle: "添加新目标",
+        goalNameLabel: "目标名称",
+        goalCategoryLabel: "所属类别",
+        dailyGoalLabel: "每日目标时长（小时）",
+        cancelText3: "取消",
+        saveGoalText: "保存目标",
+        exportDataTitle: "导出数据",
+        exportDataDesc: "选择导出格式和范围",
+        exportAllJsonText: "导出所有数据（JSON）",
+        exportTodayCsvText: "导出今日记录（CSV）",
+        exportWeekCsvText: "导出本周记录（CSV）",
+        exportCategoryCsvText: "导出类别分布（CSV）",
+        cancelText4: "取消",
+        confirmDeleteTitle: "确认删除",
+        confirmDeleteDesc: "你确定要删除这个项目吗？此操作无法撤销。",
+        cancelText5: "取消",
+        confirmDeleteBtnText: "确认删除",
+        langText: "中文"
+    },
+    en: {
+        appTitle: "Time Tracker Pro",
+        appSubtitle: "Efficiently manage every minute",
+        exportBtnText: "Export Data",
+        addRecordBtnText: "Add Time Record",
+        todayRecordsTitle: "Today's Records",
+        totalTimeLabel: "Total time today:",
+        remainingTimeLabel: "Remaining awake time:",
+        categoriesTitle: "Category Management",
+        addCategoryBtnText: "Add New Category",
+        timeDistributionTitle: "Time Distribution",
+        rangeDayText: "Today",
+        rangeWeekText: "Week",
+        rangeMonthText: "Month",
+        trendAnalysisTitle: "Trend Analysis",
+        trendWeekText: "This Week",
+        trendMonthText: "This Month",
+        trendAllText: "All Time",
+        goalTrackingTitle: "Goal Tracking",
+        addGoalBtnText: "Add Goal",
+        addRecordModalTitle: "Add Time Record",
+        recordNameLabel: "Record Name",
+        categoryLabel: "Category",
+        durationLabel: "Duration",
+        hoursText: "hours",
+        minutesText: "minutes",
+        dateLabel: "Date",
+        notesLabel: "Notes (optional)",
+        cancelText: "Cancel",
+        saveText: "Save Record",
+        addCategoryModalTitle: "Add New Category",
+        categoryNameLabel: "Category Name",
+        selectColorLabel: "Select Color",
+        selectIconLabel: "Select Icon",
+        cancelText2: "Cancel",
+        saveCategoryText: "Save Category",
+        addGoalModalTitle: "Add New Goal",
+        goalNameLabel: "Goal Name",
+        goalCategoryLabel: "Category",
+        dailyGoalLabel: "Daily Target Hours",
+        cancelText3: "Cancel",
+        saveGoalText: "Save Goal",
+        exportDataTitle: "Export Data",
+        exportDataDesc: "Select export format and range",
+        exportAllJsonText: "Export All Data (JSON)",
+        exportTodayCsvText: "Export Today's Records (CSV)",
+        exportWeekCsvText: "Export This Week's Records (CSV)",
+        exportCategoryCsvText: "Export Category Distribution (CSV)",
+        cancelText4: "Cancel",
+        confirmDeleteTitle: "Confirm Delete",
+        confirmDeleteDesc: "Are you sure you want to delete this item? This action cannot be undone.",
+        cancelText5: "Cancel",
+        confirmDeleteBtnText: "Confirm Delete",
+        langText: "English"
+    }
+};
+
+// 全局应用对象 - Evan水印
 const TimeTrackerApp = {
-    // 数据模型 - 管理所有数据和存储
+    // 当前语言
+    currentLang: 'zh',
+    // 当前主题
+    currentTheme: 'light',
+    
+    // 数据模型 - 管理所有数据和存储 - Evan水印
     dataModel: {
         currentDate: new Date(),
         records: [],
@@ -14,7 +133,7 @@ const TimeTrackerApp = {
         goals: [],
         charts: {}, // 存储图表实例
         
-        // 初始化数据
+        // 初始化数据 - Evan水印
         init() {
             // 从本地存储加载数据
             this.records = JSON.parse(localStorage.getItem('timeTrackerRecords') || '[]');
@@ -24,11 +143,11 @@ const TimeTrackerApp = {
             // 初始化默认类别（如果为空）
             if (this.categories.length === 0) {
                 this.categories = [
-                    { id: '1', name: '工作', color: '#3b82f6', icon: 'briefcase' },
-                    { id: '2', name: '健康', color: '#10b981', icon: 'heartbeat' },
-                    { id: '3', name: '学习', color: '#f59e0b', icon: 'book' },
-                    { id: '4', name: '娱乐', color: '#ec4899', icon: 'gamepad' },
-                    { id: '5', name: '生活', color: '#6366f1', icon: 'home' }
+                    { id: '1', name: TimeTrackerApp.currentLang === 'zh' ? '工作' : 'Work', color: '#3b82f6', icon: 'briefcase' },
+                    { id: '2', name: TimeTrackerApp.currentLang === 'zh' ? '健康' : 'Health', color: '#10b981', icon: 'heartbeat' },
+                    { id: '3', name: TimeTrackerApp.currentLang === 'zh' ? '学习' : 'Study', color: '#f59e0b', icon: 'book' },
+                    { id: '4', name: TimeTrackerApp.currentLang === 'zh' ? '娱乐' : 'Entertainment', color: '#ec4899', icon: 'gamepad' },
+                    { id: '5', name: TimeTrackerApp.currentLang === 'zh' ? '生活' : 'Life', color: '#6366f1', icon: 'home' }
                 ];
                 this.saveCategories();
             }
@@ -36,19 +155,19 @@ const TimeTrackerApp = {
             // 初始化默认目标（如果为空）
             if (this.goals.length === 0) {
                 this.goals = [
-                    { id: '1', name: '每日工作', categoryId: '1', targetHours: 8 },
-                    { id: '2', name: '每日学习', categoryId: '3', targetHours: 2 }
+                    { id: '1', name: TimeTrackerApp.currentLang === 'zh' ? '每日工作' : 'Daily Work', categoryId: '1', targetHours: 8 },
+                    { id: '2', name: TimeTrackerApp.currentLang === 'zh' ? '每日学习' : 'Daily Study', categoryId: '3', targetHours: 2 }
                 ];
                 this.saveGoals();
             }
         },
         
-        // 日期操作
+        // 日期操作 - Evan水印
         changeDate(days) {
             this.currentDate.setDate(this.currentDate.getDate() + days);
         },
         
-        // 记录操作
+        // 记录操作 - Evan水印
         addRecord(record) {
             const newRecord = { id: Date.now().toString(), ...record };
             this.records.push(newRecord);
@@ -56,6 +175,7 @@ const TimeTrackerApp = {
             return newRecord;
         },
         
+        // 更新记录 - Evan水印
         updateRecord(id, data) {
             const index = this.records.findIndex(r => r.id === id);
             if (index !== -1) {
@@ -66,6 +186,7 @@ const TimeTrackerApp = {
             return null;
         },
         
+        // 删除记录 - Evan水印
         deleteRecord(id) {
             const initialLength = this.records.length;
             this.records = this.records.filter(r => r.id !== id);
@@ -76,13 +197,13 @@ const TimeTrackerApp = {
             return false;
         },
         
-        // 获取当前日期的记录
+        // 获取当前日期的记录 - Evan水印
         getCurrentDateRecords() {
             const dateStr = this.currentDate.toISOString().split('T')[0];
             return this.records.filter(r => r.date && r.date.startsWith(dateStr));
         },
         
-        // 获取指定日期范围内的记录
+        // 获取指定日期范围内的记录 - Evan水印
         getRecordsInDateRange(startDate, endDate) {
             const startStr = startDate.toISOString().split('T')[0];
             const endStr = endDate.toISOString().split('T')[0];
@@ -94,7 +215,7 @@ const TimeTrackerApp = {
             });
         },
         
-        // 类别操作
+        // 添加类别 - Evan水印
         addCategory(category) {
             const newCategory = { id: Date.now().toString(), ...category };
             this.categories.push(newCategory);
@@ -102,6 +223,7 @@ const TimeTrackerApp = {
             return newCategory;
         },
         
+        // 更新类别 - Evan水印
         updateCategory(id, data) {
             const index = this.categories.findIndex(c => c.id === id);
             if (index !== -1) {
@@ -112,17 +234,24 @@ const TimeTrackerApp = {
             return null;
         },
         
+        // 删除类别 - Evan水印
         deleteCategory(id) {
             // 检查是否有关联记录
             const hasRecords = this.records.some(r => r.categoryId === id);
             if (hasRecords) {
-                return { success: false, reason: '该类别存在关联记录，无法删除' };
+                return { 
+                    success: false, 
+                    reason: TimeTrackerApp.currentLang === 'zh' ? '该类别存在关联记录，无法删除' : 'This category has associated records and cannot be deleted' 
+                };
             }
             
             // 检查是否有关联目标
             const hasGoals = this.goals.some(g => g.categoryId === id);
             if (hasGoals) {
-                return { success: false, reason: '该类别存在关联目标，无法删除' };
+                return { 
+                    success: false, 
+                    reason: TimeTrackerApp.currentLang === 'zh' ? '该类别存在关联目标，无法删除' : 'This category has associated goals and cannot be deleted' 
+                };
             }
             
             const initialLength = this.categories.length;
@@ -134,11 +263,12 @@ const TimeTrackerApp = {
             return { success: false };
         },
         
+        // 获取类别 - Evan水印
         getCategory(id) {
             return this.categories.find(c => c.id === id) || null;
         },
         
-        // 目标操作
+        // 添加目标 - Evan水印
         addGoal(goal) {
             const newGoal = { id: Date.now().toString(), ...goal };
             this.goals.push(newGoal);
@@ -146,6 +276,7 @@ const TimeTrackerApp = {
             return newGoal;
         },
         
+        // 更新目标 - Evan水印
         updateGoal(id, data) {
             const index = this.goals.findIndex(g => g.id === id);
             if (index !== -1) {
@@ -156,6 +287,7 @@ const TimeTrackerApp = {
             return null;
         },
         
+        // 删除目标 - Evan水印
         deleteGoal(id) {
             const initialLength = this.goals.length;
             this.goals = this.goals.filter(g => g.id !== id);
@@ -166,7 +298,7 @@ const TimeTrackerApp = {
             return false;
         },
         
-        // 计算类别时间分布
+        // 计算类别时间分布 - Evan水印
         calculateCategoryDistribution(range = 'day') {
             let startDate, endDate;
             const now = new Date(this.currentDate);
@@ -212,7 +344,7 @@ const TimeTrackerApp = {
             return distribution;
         },
         
-        // 计算目标进度
+        // 计算目标进度 - Evan水印
         calculateGoalProgress() {
             const todayRecords = this.getCurrentDateRecords();
             const categoryHours = {};
@@ -240,7 +372,7 @@ const TimeTrackerApp = {
             });
         },
         
-        // 计算今日总时间
+        // 计算今日总时间 - Evan水印
         calculateTotalTime() {
             const records = this.getCurrentDateRecords();
             let totalMinutes = 0;
@@ -252,7 +384,7 @@ const TimeTrackerApp = {
             return totalMinutes / 60; // 转换为小时
         },
         
-        // 本地存储操作
+        // 本地存储操作 - Evan水印
         saveRecords() {
             localStorage.setItem('timeTrackerRecords', JSON.stringify(this.records));
         },
@@ -264,9 +396,9 @@ const TimeTrackerApp = {
         }
     },
     
-    // UI渲染器 - 管理所有界面渲染
+    // UI渲染器 - 管理所有界面渲染 - Evan水印
     uiRenderer: {
-        // 初始化UI
+        // 初始化UI - Evan水印
         init() {
             this.renderCurrentDate();
             this.renderRecords();
@@ -274,365 +406,258 @@ const TimeTrackerApp = {
             this.renderGoals();
             this.populateCategorySelectors();
             this.populateTimeSelectors();
-            this.updateRecordDateField();
-            this.renderSummaryStats();
-            this.renderCategoryDistribution();
+            this.renderCharts();
+            this.setRecordDateField();
+            this.updateTotalTime();
+            this.applySavedTheme();
+            this.applySavedLanguage();
         },
         
-        // 渲染当前日期
+        // 渲染当前日期 - Evan水印
         renderCurrentDate() {
-            const date = TimeTrackerApp.dataModel.currentDate;
-            const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
-            document.getElementById('currentDateEvan').textContent = date.toLocaleDateString('zh-CN', options);
+            const options = TimeTrackerApp.currentLang === 'zh' 
+                ? { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' }
+                : { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long', weekday: 'long' };
+                
+            const dateStr = TimeTrackerApp.dataModel.currentDate.toLocaleDateString(
+                TimeTrackerApp.currentLang === 'zh' ? 'zh-CN' : 'en-US', 
+                options
+            );
+            document.getElementById('currentDateEvan').textContent = dateStr;
         },
         
-        // 渲染时间记录列表
+        // 渲染记录列表 - Evan水印
         renderRecords() {
+            const recordsList = document.getElementById('recordsListEvan');
             const records = TimeTrackerApp.dataModel.getCurrentDateRecords();
-            const container = document.getElementById('recordsListEvan');
             
             if (records.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-8 text-gray-500">
-                        <i class="fa fa-calendar-o text-3xl mb-2 opacity-50"></i>
-                        <p>暂无时间记录</p>
-                        <p class="text-sm mt-1">点击"添加时间记录"开始追踪</p>
+                recordsList.innerHTML = `
+                    <div class="text-center py-8 light:text-light-textSecondary dark:text-dark-textSecondary">
+                        <i class="fa fa-calendar-o text-3xl mb-2"></i>
+                        <p>${TimeTrackerApp.currentLang === 'zh' ? '今日暂无记录' : 'No records for today'}</p>
                     </div>
                 `;
                 return;
             }
             
-            // 按时间倒序排列（最新的在前）
-            const sortedRecords = [...records].sort((a, b) => new Date(b.date) - new Date(a.date));
-            
-            container.innerHTML = sortedRecords.map(record => this.createRecordElement(record)).join('');
-        },
-        
-        // 创建单个记录元素
-        createRecordElement(record) {
-            const category = TimeTrackerApp.dataModel.getCategory(record.categoryId);
-            return `
-                <div class="record-itemEvan p-3 rounded-lg bg-white shadow-sm border-l-4 transition-all duration-300 hover:shadow-md" 
-                     style="border-color: ${category?.color || '#6366f1'}">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h4 class="font-medium">${this.escapeHtml(record.name)}</h4>
-                            <p class="text-sm text-gray-500 mt-1">
-                                <i class="fa fa-${category?.icon || 'tag'} mr-1"></i>
-                                ${category?.name || '未分类'}
-                            </p>
-                        </div>
-                        <span class="font-bold">${record.hours}h${record.minutes}m</span>
-                    </div>
-                    ${record.notes ? `
-                        <p class="text-sm text-gray-600 mt-2 italic">${this.escapeHtml(record.notes)}</p>
-                    ` : ''}
-                    <div class="flex gap-2 mt-3">
-                        <button class="record-action-btnEvan edit text-blue-500 hover:text-blue-700 transition-colors" 
-                                data-id="${record.id}" title="编辑">
-                            <i class="fa fa-pencil"></i>
-                        </button>
-                        <button class="record-action-btnEvan delete text-red-500 hover:text-red-700 transition-colors" 
-                                data-id="${record.id}" title="删除">
-                            <i class="fa fa-trash"></i>
-                        </button>
-                    </div>
-                </div>
-            `;
-        },
-        
-        // 渲染类别列表
-        renderCategories() {
-            const categories = TimeTrackerApp.dataModel.categories;
-            const container = document.getElementById('categoriesListEvan');
-            
-            container.innerHTML = categories.map(category => `
-                <div class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm transition-all duration-300 hover:shadow-md">
+            recordsList.innerHTML = '';
+            records.forEach(record => {
+                const category = TimeTrackerApp.dataModel.getCategory(record.categoryId);
+                if (!category) return;
+                
+                const recordEl = document.createElement('div');
+                recordEl.className = 'p-3 rounded-lg light:bg-light-bg dark:bg-dark-bg border light:border-light-border dark:border-dark-border flex justify-between items-center theme-transition';
+                recordEl.innerHTML = `
                     <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 rounded-full flex items-center justify-center" style="background-color: ${category.color}20">
-                            <i class="fa fa-${category.icon} text-sm" style="color: ${category.color}"></i>
+                        <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background-color: ${category.color}20; color: ${category.color}">
+                            <i class="fa fa-${category.icon}"></i>
                         </div>
-                        <span>${this.escapeHtml(category.name)}</span>
+                        <div>
+                            <h4 class="font-medium">${record.name}</h4>
+                            <p class="text-sm light:text-light-textSecondary dark:text-dark-textSecondary">${category.name} · ${record.hours}${TimeTrackerApp.currentLang === 'zh' ? '小时' : 'h'}${record.minutes}${TimeTrackerApp.currentLang === 'zh' ? '分钟' : 'm'}</p>
+                            ${record.notes ? `<p class="text-xs mt-1 light:text-light-textSecondary dark:text-dark-textSecondary">${record.notes}</p>` : ''}
+                        </div>
                     </div>
                     <div class="flex gap-2">
-                        <button class="category-action-btnEvan edit text-blue-500 hover:text-blue-700 transition-colors" 
-                                data-id="${category.id}" title="编辑">
-                            <i class="fa fa-pencil"></i>
+                        <button class="editRecordEvanBtn p-2 rounded-full hover:light:bg-gray-100 hover:dark:bg-gray-700 transition-colors" data-id="${record.id}">
+                            <i class="fa fa-pencil light:text-light-text dark:text-dark-text"></i>
                         </button>
-                        <button class="category-action-btnEvan delete text-red-500 hover:text-red-700 transition-colors" 
-                                data-id="${category.id}" title="删除">
-                            <i class="fa fa-trash"></i>
+                        <button class="deleteRecordEvanBtn p-2 rounded-full hover:light:bg-gray-100 hover:dark:bg-gray-700 transition-colors" data-id="${record.id}" data-type="record">
+                            <i class="fa fa-trash light:text-light-text dark:text-dark-text"></i>
                         </button>
                     </div>
-                </div>
-            `).join('');
+                `;
+                recordsList.appendChild(recordEl);
+            });
         },
         
-        // 渲染目标列表
-        renderGoals() {
-            const goalsWithProgress = TimeTrackerApp.dataModel.calculateGoalProgress();
-            const container = document.getElementById('goalsListEvan');
+        // 渲染类别列表 - Evan水印
+        renderCategories() {
+            const categoriesList = document.getElementById('categoriesListEvan');
+            const categories = TimeTrackerApp.dataModel.categories;
             
-            if (goalsWithProgress.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-8 text-gray-500">
-                        <i class="fa fa-bullseye text-3xl mb-2 opacity-50"></i>
-                        <p>暂无目标</p>
-                        <p class="text-sm mt-1">点击"添加目标"开始设置</p>
+            categoriesList.innerHTML = '';
+            categories.forEach(category => {
+                const categoryEl = document.createElement('div');
+                categoryEl.className = 'p-3 rounded-lg light:bg-light-bg dark:bg-dark-bg border light:border-light-border dark:border-dark-border flex justify-between items-center theme-transition';
+                categoryEl.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full" style="background-color: ${category.color}"></div>
+                        <div class="flex items-center gap-2">
+                            <i class="fa fa-${category.icon} light:text-light-text dark:text-dark-text"></i>
+                            <span>${category.name}</span>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button class="editCategoryEvanBtn p-2 rounded-full hover:light:bg-gray-100 hover:dark:bg-gray-700 transition-colors" data-id="${category.id}">
+                            <i class="fa fa-pencil light:text-light-text dark:text-dark-text"></i>
+                        </button>
+                        <button class="deleteCategoryEvanBtn p-2 rounded-full hover:light:bg-gray-100 hover:dark:bg-gray-700 transition-colors" data-id="${category.id}" data-type="category">
+                            <i class="fa fa-trash light:text-light-text dark:text-dark-text"></i>
+                        </button>
+                    </div>
+                `;
+                categoriesList.appendChild(categoryEl);
+            });
+        },
+        
+        // 渲染目标列表 - Evan水印
+        renderGoals() {
+            const goalsList = document.getElementById('goalsListEvan');
+            const goals = TimeTrackerApp.dataModel.calculateGoalProgress();
+            
+            if (goals.length === 0) {
+                goalsList.innerHTML = `
+                    <div class="text-center py-8 light:text-light-textSecondary dark:text-dark-textSecondary">
+                        <i class="fa fa-bullseye text-3xl mb-2"></i>
+                        <p>${TimeTrackerApp.currentLang === 'zh' ? '暂无目标，添加一个新目标吧' : 'No goals yet, add a new goal'}</p>
                     </div>
                 `;
                 return;
             }
             
-            container.innerHTML = goalsWithProgress.map(goal => {
+            goalsList.innerHTML = '';
+            goals.forEach(goal => {
                 const category = TimeTrackerApp.dataModel.getCategory(goal.categoryId);
-                const progressColor = goal.progress >= 100 ? 'text-green-500' : 'text-primary';
+                if (!category) return;
                 
-                return `
-                    <div class="bg-white p-4 rounded-lg shadow-sm transition-all duration-300 hover:shadow-md">
-                        <div class="flex justify-between items-start mb-2">
-                            <div>
-                                <h4 class="font-medium">${this.escapeHtml(goal.name)}</h4>
-                                <p class="text-sm text-gray-500">
-                                    <i class="fa fa-${category?.icon || 'tag'} mr-1"></i>
-                                    ${category?.name || '未分类'}
-                                </p>
-                            </div>
-                            <button class="goal-action-btnEvan delete text-red-500 hover:text-red-700 transition-colors" 
-                                    data-id="${goal.id}" title="删除">
-                                <i class="fa fa-trash"></i>
+                const goalEl = document.createElement('div');
+                goalEl.className = 'p-4 rounded-lg light:bg-light-bg dark:bg-dark-bg border light:border-light-border dark:border-dark-border theme-transition';
+                goalEl.innerHTML = `
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <h4 class="font-medium flex items-center gap-2">
+                                <i class="fa fa-${category.icon}" style="color: ${category.color}"></i>
+                                ${goal.name}
+                            </h4>
+                            <p class="text-sm light:text-light-textSecondary dark:text-dark-textSecondary">
+                                ${category.name} · ${goal.hoursSpent.toFixed(1)}${TimeTrackerApp.currentLang === 'zh' ? '小时' : 'h'} / ${goal.targetHours}${TimeTrackerApp.currentLang === 'zh' ? '小时' : 'h'}
+                            </p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button class="editGoalEvanBtn p-2 rounded-full hover:light:bg-gray-100 hover:dark:bg-gray-700 transition-colors" data-id="${goal.id}">
+                                <i class="fa fa-pencil light:text-light-text dark:text-dark-text"></i>
+                            </button>
+                            <button class="deleteGoalEvanBtn p-2 rounded-full hover:light:bg-gray-100 hover:dark:bg-gray-700 transition-colors" data-id="${goal.id}" data-type="goal">
+                                <i class="fa fa-trash light:text-light-text dark:text-dark-text"></i>
                             </button>
                         </div>
-                        <div class="mt-3">
-                            <div class="flex justify-between text-sm mb-1">
-                                <span>今日进度</span>
-                                <span class="${progressColor} font-medium">
-                                    ${goal.hoursSpent.toFixed(1)}h / ${goal.targetHours}h (${goal.progress}%)
-                                </span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-2.5">
-                                <div class="h-2.5 rounded-full transition-all duration-1000 ease-out" 
-                                     style="width: ${goal.progress}%; background-color: ${category?.color || '#6366f1'}"></div>
-                            </div>
-                        </div>
+                    </div>
+                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                        <div class="h-2.5 rounded-full" style="width: ${goal.progress}%; background-color: ${category.color}"></div>
+                    </div>
+                    <div class="flex justify-end mt-1">
+                        <span class="text-sm font-medium" style="color: ${category.color}">${goal.progress}%</span>
                     </div>
                 `;
-            }).join('');
-        },
-        
-        // 渲染类别分布
-        renderCategoryDistribution(range = 'day') {
-            const distribution = TimeTrackerApp.dataModel.calculateCategoryDistribution(range);
-            const container = document.getElementById('categoryDistributionEvan');
-            
-            // 计算总时间
-            let totalHours = 0;
-            Object.values(distribution).forEach(hours => {
-                totalHours += hours;
+                goalsList.appendChild(goalEl);
             });
-            
-            if (totalHours === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-6 text-gray-500">
-                        <p>暂无数据</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            // 按时间排序
-            const sortedCategories = [...TimeTrackerApp.dataModel.categories]
-                .filter(category => (distribution[category.id] || 0) > 0)
-                .sort((a, b) => (distribution[b.id] || 0) - (distribution[a.id] || 0));
-            
-            container.innerHTML = sortedCategories.map(category => {
-                const hours = distribution[category.id] || 0;
-                const percentage = Math.round((hours / totalHours) * 100);
-                
-                return `
-                    <div class="flex items-center gap-3">
-                        <div class="w-3 h-3 rounded-full" style="background-color: ${category.color}"></div>
-                        <span class="text-sm flex-1">${this.escapeHtml(category.name)}</span>
-                        <div class="text-right">
-                            <div class="text-sm font-medium">${hours.toFixed(1)}h</div>
-                            <div class="text-xs text-gray-500">${percentage}%</div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
         },
         
-        // 渲染汇总统计
-        renderSummaryStats() {
-            const totalHours = TimeTrackerApp.dataModel.calculateTotalTime();
-            const remainingHours = Math.max(0, 16 - totalHours); // 假设每天清醒时间16小时
-            
-            document.getElementById('totalTimeEvan').textContent = `${totalHours.toFixed(1)}小时`;
-            document.getElementById('remainingTimeEvan').textContent = `${remainingHours.toFixed(1)}小时`;
-        },
-        
-        // 填充类别选择器
+        // 填充类别选择器 - Evan水印
         populateCategorySelectors() {
+            const categorySelect = document.getElementById('categorySelectEvan');
+            const goalCategorySelect = document.getElementById('goalCategorySelectEvan');
             const categories = TimeTrackerApp.dataModel.categories;
-            const recordSelector = document.getElementById('categorySelectEvan');
-            const goalSelector = document.getElementById('goalCategorySelectEvan');
             
-            // 保存当前选中值（避免重新渲染后丢失选择）
-            const recordSelected = recordSelector.value;
-            const goalSelected = goalSelector.value;
+            // 清空现有选项
+            categorySelect.innerHTML = '';
+            goalCategorySelect.innerHTML = '';
             
-            // 清空并填充选项
-            recordSelector.innerHTML = categories.map(cat => `
-                <option value="${cat.id}">${this.escapeHtml(cat.name)}</option>
-            `).join('');
+            // 添加默认选项
+            const defaultOption = document.createElement('option');
+            defaultOption.value = '';
+            defaultOption.textContent = TimeTrackerApp.currentLang === 'zh' ? '选择类别' : 'Select category';
+            defaultOption.disabled = true;
+            defaultOption.selected = true;
             
-            goalSelector.innerHTML = categories.map(cat => `
-                <option value="${cat.id}">${this.escapeHtml(cat.name)}</option>
-            `).join('');
+            const defaultOption2 = defaultOption.cloneNode(true);
             
-            // 恢复选中值
-            if (recordSelected) recordSelector.value = recordSelected;
-            if (goalSelected) goalSelector.value = goalSelected;
+            categorySelect.appendChild(defaultOption);
+            goalCategorySelect.appendChild(defaultOption2);
+            
+            // 添加类别选项
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category.id;
+                option.textContent = category.name;
+                
+                const option2 = option.cloneNode(true);
+                
+                categorySelect.appendChild(option);
+                goalCategorySelect.appendChild(option2);
+            });
         },
         
-        // 填充时间选择器（小时和分钟）
+        // 填充时间选择器 - Evan水印
         populateTimeSelectors() {
             const hoursSelect = document.getElementById('hoursEvan');
             const minutesSelect = document.getElementById('minutesEvan');
             
-            // 填充小时（0-23）
-            let hoursHtml = '';
+            // 填充小时选项
+            hoursSelect.innerHTML = '';
             for (let i = 0; i <= 23; i++) {
-                hoursHtml += `<option value="${i}">${i}</option>`;
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = i;
+                hoursSelect.appendChild(option);
             }
-            hoursSelect.innerHTML = hoursHtml;
             
-            // 填充分钟（0-59，间隔5分钟）
-            let minutesHtml = '';
-            for (let i = 0; i <= 59; i += 5) {
-                minutesHtml += `<option value="${i}">${i}</option>`;
-            }
-            minutesSelect.innerHTML = minutesHtml;
-        },
-        
-        // 更新记录日期字段
-        updateRecordDateField() {
-            const date = TimeTrackerApp.dataModel.currentDate;
-            const options = { year: 'numeric', month: 'long', day: 'numeric' };
-            document.getElementById('recordDateEvan').value = date.toLocaleDateString('zh-CN', options);
-        },
-        
-        // 清空记录表单
-        clearRecordForm() {
-            document.getElementById('recordNameEvan').value = '';
-            document.getElementById('recordNotesEvan').value = '';
-            document.getElementById('hoursEvan').value = '0';
-            document.getElementById('minutesEvan').value = '0';
-            if (TimeTrackerApp.dataModel.categories.length > 0) {
-                document.getElementById('categorySelectEvan').value = TimeTrackerApp.dataModel.categories[0].id;
+            // 填充分钟选项
+            minutesSelect.innerHTML = '';
+            for (let i = 0; i < 60; i += 5) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = i;
+                minutesSelect.appendChild(option);
             }
         },
         
-        // 清空类别表单
-        clearCategoryForm() {
-            document.getElementById('categoryNameEvan').value = '';
-            document.getElementById('categoryColorEvan').value = '#6366f1';
-            document.getElementById('categoryIconEvan').value = 'briefcase';
+        // 设置记录日期字段 - Evan水印
+        setRecordDateField() {
+            const dateInput = document.getElementById('recordDateEvan');
+            const dateStr = TimeTrackerApp.dataModel.currentDate.toISOString().split('T')[0];
+            dateInput.value = dateStr;
+        },
+        
+        // 更新总时间显示 - Evan水印
+        updateTotalTime() {
+            const totalHours = TimeTrackerApp.dataModel.calculateTotalTime();
+            const remainingHours = Math.max(0, 16 - totalHours); // 假设每天清醒16小时
             
-            // 重置选择状态
-            document.querySelectorAll('.categoryColorBtnEvan').forEach(btn => {
-                btn.classList.remove('selected', 'ring-2', 'ring-primary', 'ring-offset-2');
-                if (btn.dataset.color === '#6366f1') {
-                    btn.classList.add('selected', 'ring-2', 'ring-primary', 'ring-offset-2');
-                }
-            });
-            
-            document.querySelectorAll('.categoryIconBtnEvan').forEach(btn => {
-                btn.classList.remove('selected', 'ring-2', 'ring-primary', 'ring-offset-2');
-                if (btn.dataset.icon === 'briefcase') {
-                    btn.classList.add('selected', 'ring-2', 'ring-primary', 'ring-offset-2');
-                }
-            });
+            document.getElementById('totalTimeEvan').textContent = `${totalHours.toFixed(1)}${TimeTrackerApp.currentLang === 'zh' ? '小时' : 'h'}`;
+            document.getElementById('remainingTimeEvan').textContent = `${remainingHours.toFixed(1)}${TimeTrackerApp.currentLang === 'zh' ? '小时' : 'h'}`;
         },
         
-        // 清空目标表单
-        clearGoalForm() {
-            document.getElementById('goalNameEvan').value = '';
-            document.getElementById('goalHoursEvan').value = '1';
-            if (TimeTrackerApp.dataModel.categories.length > 0) {
-                document.getElementById('goalCategorySelectEvan').value = TimeTrackerApp.dataModel.categories[0].id;
-            }
-        },
-        
-        // HTML转义（防止XSS）
-        escapeHtml(unsafe) {
-            if (!unsafe) return '';
-            return unsafe
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
-        }
-    },
-    
-    // 图表管理器 - 管理所有图表渲染
-    chartManager: {
-        // 初始化图表
-        init() {
+        // 渲染图表 - Evan水印
+        renderCharts() {
             this.renderTimeDistributionChart();
             this.renderTrendAnalysisChart();
-            
-            // 监听窗口大小变化，重绘图表
-            window.addEventListener('resize', this.throttle(() => {
-                this.renderTimeDistributionChart();
-                this.renderTrendAnalysisChart();
-            }, 300));
         },
         
-        // 渲染时间分配饼图
-        renderTimeDistributionChart(range = 'day') {
-            const distribution = TimeTrackerApp.dataModel.calculateCategoryDistribution(range);
+        // 渲染时间分布图表 - Evan水印
+        renderTimeDistributionChart() {
             const ctx = document.getElementById('timeDistributionChartEvan').getContext('2d');
+            const distribution = TimeTrackerApp.dataModel.calculateCategoryDistribution(
+                document.querySelector('.timeRangeBtnEvan.active')?.dataset.range || 'day'
+            );
             
             // 准备图表数据
             const labels = [];
             const data = [];
             const backgroundColor = [];
             
-            TimeTrackerApp.dataModel.categories.forEach(category => {
-                const hours = distribution[category.id] || 0;
-                if (hours > 0) {
-                    labels.push(category.name);
-                    data.push(hours);
-                    backgroundColor.push(category.color);
-                }
+            Object.keys(distribution).forEach(categoryId => {
+                const category = TimeTrackerApp.dataModel.getCategory(categoryId);
+                if (!category || distribution[categoryId] <= 0) return;
+                
+                labels.push(category.name);
+                data.push(distribution[categoryId]);
+                backgroundColor.push(category.color);
             });
             
-            // 如果没有数据
-            if (data.length === 0) {
-                if (TimeTrackerApp.dataModel.charts.timeDistribution) {
-                    TimeTrackerApp.dataModel.charts.timeDistribution.destroy();
-                }
-                
-                const canvas = document.getElementById('timeDistributionChartEvan');
-                const parent = canvas.parentElement;
-                parent.innerHTML = `
-                    <div class="h-full flex items-center justify-center text-gray-500">
-                        <div class="text-center">
-                            <i class="fa fa-pie-chart text-4xl mb-3 opacity-50"></i>
-                            <p>暂无${this.getRangeText(range)}数据</p>
-                        </div>
-                    </div>
-                `;
-                return;
-            }
-            
-            // 重新创建canvas（修复图表重绘问题）
-            const canvas = document.getElementById('timeDistributionChartEvan');
-            if (!canvas) return;
-            
-            // 销毁旧图表
+            // 销毁现有图表
             if (TimeTrackerApp.dataModel.charts.timeDistribution) {
                 TimeTrackerApp.dataModel.charts.timeDistribution.destroy();
             }
@@ -646,13 +671,12 @@ const TimeTrackerApp = {
                         data: data,
                         backgroundColor: backgroundColor,
                         borderWidth: 0,
-                        hoverOffset: 10
+                        hoverOffset: 4
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    cutout: '70%',
                     plugins: {
                         legend: {
                             display: false
@@ -663,114 +687,104 @@ const TimeTrackerApp = {
                                     const value = context.raw;
                                     const total = context.dataset.data.reduce((a, b) => a + b, 0);
                                     const percentage = Math.round((value / total) * 100);
-                                    return `${context.label}: ${value.toFixed(1)}h (${percentage}%)`;
+                                    return `${context.label}: ${value.toFixed(1)}${TimeTrackerApp.currentLang === 'zh' ? '小时' : 'h'} (${percentage}%)`;
                                 }
                             }
                         }
                     },
-                    animation: {
-                        animateScale: true,
-                        animateRotate: true
-                    }
+                    cutout: '70%'
                 }
+            });
+            
+            // 更新类别分布列表
+            this.updateCategoryDistribution(distribution);
+        },
+        
+        // 更新类别分布列表 - Evan水印
+        updateCategoryDistribution(distribution) {
+            const container = document.getElementById('categoryDistributionEvan');
+            container.innerHTML = '';
+            
+            // 转换为数组并排序
+            const distributionArray = Object.entries(distribution)
+                .map(([categoryId, hours]) => ({ categoryId, hours }))
+                .sort((a, b) => b.hours - a.hours);
+            
+            distributionArray.forEach(({ categoryId, hours }) => {
+                const category = TimeTrackerApp.dataModel.getCategory(categoryId);
+                if (!category || hours <= 0) return;
+                
+                const total = Object.values(distribution).reduce((a, b) => a + b, 0);
+                const percentage = total > 0 ? Math.round((hours / total) * 100) : 0;
+                
+                const item = document.createElement('div');
+                item.className = 'flex flex-col';
+                item.innerHTML = `
+                    <div class="flex justify-between items-center mb-1">
+                        <div class="flex items-center gap-2">
+                            <div class="w-3 h-3 rounded-full" style="background-color: ${category.color}"></div>
+                            <span class="text-sm">${category.name}</span>
+                        </div>
+                        <span class="text-sm font-medium">${hours.toFixed(1)}${TimeTrackerApp.currentLang === 'zh' ? '小时' : 'h'} (${percentage}%)</span>
+                    </div>
+                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+                        <div class="h-1.5 rounded-full" style="width: ${percentage}%; background-color: ${category.color}"></div>
+                    </div>
+                `;
+                container.appendChild(item);
             });
         },
         
-        // 渲染趋势分析柱状图
-        renderTrendAnalysisChart(range = 'week') {
+        // 渲染趋势分析图表 - Evan水印
+        renderTrendAnalysisChart() {
             const ctx = document.getElementById('trendAnalysisChartEvan').getContext('2d');
-            let labels = [];
-            let datasets = [];
-            let startDate, endDate, dateIncrement;
+            const range = document.querySelector('.trendRangeBtnEvan.active')?.dataset.range || 'week';
             
-            // 根据范围设置日期参数
-            const now = new Date(TimeTrackerApp.dataModel.currentDate);
-            switch (range) {
-                case 'week':
-                    startDate = new Date(now);
-                    startDate.setDate(now.getDate() - 6); // 过去7天
-                    endDate = new Date(now);
-                    dateIncrement = 1; // 每天
-                    // 生成标签（星期几）
-                    labels = this.getDateLabels(startDate, endDate, 'weekday');
-                    break;
-                case 'month':
-                    startDate = new Date(now.getFullYear(), now.getMonth(), 1);
-                    endDate = new Date(now);
-                    dateIncrement = 1; // 每天
-                    // 生成标签（日期）
-                    labels = this.getDateLabels(startDate, endDate, 'day');
-                    break;
-                case 'all':
-                    // 获取最早记录日期
-                    const allRecords = TimeTrackerApp.dataModel.records;
-                    if (allRecords.length === 0) {
-                        startDate = new Date(now);
-                        endDate = new Date(now);
-                    } else {
-                        const earliestDate = new Date(Math.min(...allRecords.map(r => new Date(r.date))));
-                        startDate = new Date(earliestDate.getFullYear(), earliestDate.getMonth(), 1);
-                        endDate = new Date(now);
-                    }
-                    dateIncrement = 30; // 约每月
-                    // 生成标签（月份）
-                    labels = this.getDateLabels(startDate, endDate, 'month');
-                    break;
-            }
+            // 确定日期范围
+            let dates = [];
+            const today = new Date(TimeTrackerApp.dataModel.currentDate);
             
-            // 准备数据集（按类别）
-            const categoryData = {};
-            TimeTrackerApp.dataModel.categories.forEach(category => {
-                categoryData[category.id] = new Array(labels.length).fill(0);
-            });
-            
-            // 填充数据
-            labels.forEach((label, index) => {
-                const [periodStart, periodEnd] = this.getPeriodDates(startDate, index, dateIncrement, range);
-                const records = TimeTrackerApp.dataModel.getRecordsInDateRange(periodStart, periodEnd);
-                
-                records.forEach(record => {
-                    const hours = record.hours + (record.minutes / 60);
-                    if (categoryData[record.categoryId] && categoryData[record.categoryId][index] !== undefined) {
-                        categoryData[record.categoryId][index] += hours;
-                    }
-                });
-            });
-            
-            // 转换为图表数据集格式
-            datasets = TimeTrackerApp.dataModel.categories
-                .filter(category => categoryData[category.id].some(value => value > 0))
-                .map(category => ({
-                    label: category.name,
-                    data: categoryData[category.id],
-                    backgroundColor: category.color + '80', // 带透明度
-                    borderColor: category.color,
-                    borderWidth: 1,
-                    borderRadius: 4,
-                    barPercentage: 0.6,
-                    categoryPercentage: 0.8
-                }));
-            
-            // 如果没有数据
-            if (datasets.length === 0) {
-                if (TimeTrackerApp.dataModel.charts.trendAnalysis) {
-                    TimeTrackerApp.dataModel.charts.trendAnalysis.destroy();
+            if (range === 'week') {
+                // 过去7天
+                for (let i = 6; i >= 0; i--) {
+                    const date = new Date(today);
+                    date.setDate(today.getDate() - i);
+                    dates.push(date);
                 }
-                
-                const canvas = document.getElementById('trendAnalysisChartEvan');
-                const parent = canvas.parentElement;
-                parent.innerHTML = `
-                    <div class="h-full flex items-center justify-center text-gray-500">
-                        <div class="text-center">
-                            <i class="fa fa-bar-chart text-4xl mb-3 opacity-50"></i>
-                            <p>暂无${this.getRangeText(range)}数据</p>
-                        </div>
-                    </div>
-                `;
-                return;
+            } else if (range === 'month') {
+                // 过去30天
+                for (let i = 29; i >= 0; i--) {
+                    const date = new Date(today);
+                    date.setDate(today.getDate() - i);
+                    dates.push(date);
+                }
+            } else {
+                // 所有记录的日期，去重并排序
+                const recordDates = [...new Set(TimeTrackerApp.dataModel.records.map(r => r.date?.split('T')[0]))]
+                    .filter(d => d)
+                    .sort();
+                dates = recordDates.map(d => new Date(d));
             }
             
-            // 销毁旧图表
+            // 准备图表数据
+            const labels = dates.map(date => {
+                return TimeTrackerApp.currentLang === 'zh'
+                    ? `${date.getMonth() + 1}/${date.getDate()}`
+                    : `${date.getMonth() + 1}/${date.getDate()}`;
+            });
+            
+            const data = dates.map(date => {
+                const start = new Date(date);
+                const end = new Date(date);
+                end.setDate(end.getDate() + 1);
+                
+                const dayRecords = TimeTrackerApp.dataModel.getRecordsInDateRange(start, end);
+                return dayRecords.reduce((total, record) => {
+                    return total + record.hours + (record.minutes / 60);
+                }, 0);
+            });
+            
+            // 销毁现有图表
             if (TimeTrackerApp.dataModel.charts.trendAnalysis) {
                 TimeTrackerApp.dataModel.charts.trendAnalysis.destroy();
             }
@@ -780,791 +794,764 @@ const TimeTrackerApp = {
                 type: 'bar',
                 data: {
                     labels: labels,
-                    datasets: datasets
+                    datasets: [{
+                        label: TimeTrackerApp.currentLang === 'zh' ? '小时' : 'Hours',
+                        data: data,
+                        backgroundColor: 'rgba(99, 102, 241, 0.7)',
+                        borderRadius: 6
+                    }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    scales: {
-                        x: {
-                            grid: {
-                                display: false
-                            }
-                        },
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: '小时'
-                            }
-                        }
-                    },
                     plugins: {
                         legend: {
-                            position: 'top',
-                            labels: {
-                                usePointStyle: true,
-                                boxWidth: 6
-                            }
+                            display: false
                         },
                         tooltip: {
-                            mode: 'index',
-                            intersect: false,
                             callbacks: {
                                 label: function(context) {
-                                    return `${context.dataset.label}: ${context.raw.toFixed(1)}h`;
+                                    return `${context.raw.toFixed(1)}${TimeTrackerApp.currentLang === 'zh' ? '小时' : 'h'}`;
                                 }
                             }
                         }
                     },
-                    animation: {
-                        duration: 1000
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: TimeTrackerApp.currentTheme === 'light' ? 'rgba(0, 0, 0, 0.05)' : 'rgba(255, 255, 255, 0.05)'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value + (TimeTrackerApp.currentLang === 'zh' ? 'h' : 'h');
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
                     }
                 }
             });
         },
         
-        // 获取范围文本（用于显示）
-        getRangeText(range) {
-            const rangeMap = {
-                'day': '今日',
-                'week': '本周',
-                'month': '本月',
-                'all': '所有'
-            };
-            return rangeMap[range] || '';
-        },
-        
-        // 生成日期标签
-        getDateLabels(startDate, endDate, type) {
-            const labels = [];
-            const currentDate = new Date(startDate);
-            
-            while (currentDate <= endDate) {
-                if (type === 'weekday') {
-                    // 显示星期几（一/二/.../日）
-                    const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
-                    labels.push(`周${weekdays[currentDate.getDay()]}`);
-                } else if (type === 'day') {
-                    // 显示日期（1/2/.../31）
-                    labels.push(currentDate.getDate() + '日');
-                } else if (type === 'month') {
-                    // 显示月份（1月/2月/.../12月）
-                    labels.push(`${currentDate.getMonth() + 1}月`);
-                }
-                
-                currentDate.setDate(currentDate.getDate() + 1);
-            }
-            
-            return labels;
-        },
-        
-        // 获取时间段的开始和结束日期
-        getPeriodDates(startDate, index, increment, range) {
-            const periodStart = new Date(startDate);
-            
-            if (range === 'all') {
-                periodStart.setMonth(periodStart.getMonth() + (index * (increment / 30)));
-            } else {
-                periodStart.setDate(periodStart.getDate() + (index * increment));
-            }
-            
-            const periodEnd = new Date(periodStart);
-            
-            if (range === 'all') {
-                periodEnd.setMonth(periodEnd.getMonth() + 1);
-                periodEnd.setDate(0); // 当月最后一天
-            } else {
-                periodEnd.setDate(periodEnd.getDate() + increment - 1);
-            }
-            
-            return [periodStart, periodEnd];
-        },
-        
-        // 节流函数
-        throttle(func, limit) {
-            let lastCall = 0;
-            return function(...args) {
-                const now = Date.now();
-                if (now - lastCall >= limit) {
-                    lastCall = now;
-                    func.apply(this, args);
-                }
-            };
-        }
-    },
-    
-    // 模态框管理器
-    modalManager: {
-        // 打开模态框
-        open(modalId) {
-            const modal = document.getElementById(modalId);
-            if (modal) {
-                modal.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            }
-        },
-        
-        // 关闭模态框
-        close(modalId) {
-            const modal = document.getElementById(modalId);
-            if (modal) {
-                modal.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-        }
-    },
-    
-    // 通知管理器
-    notificationManager: {
-        // 显示通知
-        show(message, type = 'success') {
+        // 显示通知 - Evan水印
+        showNotification(message, type = 'success') {
             const notification = document.getElementById('notification');
-            const textElement = document.getElementById('notificationText');
+            const notificationText = document.getElementById('notificationText');
             
-            // 设置类型样式
-            notification.className = 'notification';
-            notification.classList.add(type);
+            notification.className = `notification ${type} light:bg-white dark:bg-dark-card theme-transition`;
+            notificationText.textContent = message;
             
-            // 设置消息
-            textElement.textContent = message;
-            
-            // 显示通知
             notification.classList.add('show');
             
-            // 3秒后自动隐藏
             setTimeout(() => {
                 notification.classList.remove('show');
             }, 3000);
+        },
+        
+        // 显示模态框 - Evan水印
+        showModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        },
+        
+        // 隐藏模态框 - Evan水印
+        hideModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        },
+        
+        // 清空模态框表单 - Evan水印
+        clearModalForms() {
+            // 清空记录表单
+            document.getElementById('recordNameEvan').value = '';
+            document.getElementById('categorySelectEvan').value = '';
+            document.getElementById('hoursEvan').value = '0';
+            document.getElementById('minutesEvan').value = '0';
+            document.getElementById('recordNotesEvan').value = '';
+            
+            // 清空类别表单
+            document.getElementById('categoryNameEvan').value = '';
+            document.getElementById('categoryColorEvan').value = '#6366f1';
+            document.getElementById('categoryIconEvan').value = 'briefcase';
+            document.querySelectorAll('.categoryColorBtnEvan').forEach(btn => btn.classList.remove('selected'));
+            document.querySelectorAll('.categoryIconBtnEvan').forEach(btn => btn.classList.remove('selected'));
+            document.querySelector(`.categoryColorBtnEvan[data-color="#6366f1"]`).classList.add('selected');
+            document.querySelector(`.categoryIconBtnEvan[data-icon="briefcase"]`).classList.add('selected');
+            
+            // 清空目标表单
+            document.getElementById('goalNameEvan').value = '';
+            document.getElementById('goalCategorySelectEvan').value = '';
+            document.getElementById('goalHoursEvan').value = '1';
+            
+            // 重置表单状态
+            document.getElementById('editRecordIdEvan').value = '';
+            document.getElementById('editCategoryIdEvan').value = '';
+            document.getElementById('editGoalIdEvan').value = '';
+        },
+        
+        // 应用保存的主题 - Evan水印
+        applySavedTheme() {
+            const savedTheme = localStorage.getItem('timeTrackerTheme') || 'light';
+            TimeTrackerApp.currentTheme = savedTheme;
+            document.documentElement.classList.toggle('dark', savedTheme === 'dark');
+        },
+        
+        // 切换主题 - Evan水印
+        toggleTheme() {
+            const newTheme = TimeTrackerApp.currentTheme === 'light' ? 'dark' : 'light';
+            TimeTrackerApp.currentTheme = newTheme;
+            document.documentElement.classList.toggle('dark', newTheme === 'dark');
+            localStorage.setItem('timeTrackerTheme', newTheme);
+            
+            // 重新渲染图表以适应新主题
+            this.renderCharts();
+        },
+        
+        // 应用保存的语言 - Evan水印
+        applySavedLanguage() {
+            const savedLang = localStorage.getItem('timeTrackerLang') || 'zh';
+            TimeTrackerApp.currentLang = savedLang;
+            this.updateLanguageText();
+        },
+        
+        // 切换语言 - Evan水印
+        toggleLanguage() {
+            const newLang = TimeTrackerApp.currentLang === 'zh' ? 'en' : 'zh';
+            TimeTrackerApp.currentLang = newLang;
+            localStorage.setItem('timeTrackerLang', newLang);
+            this.updateLanguageText();
+            
+            // 更新类别和目标的名称
+            this.updateLocalizedNames();
+            
+            // 重新渲染所有内容
+            this.init();
+        },
+        
+        // 更新界面语言文本 - Evan水印
+        updateLanguageText() {
+            // 更新标题和副标题
+            document.querySelector('h1').innerHTML = `<i class="fa fa-clock-o" aria-hidden="true"></i> ${i18n[TimeTrackerApp.currentLang].appTitle}`;
+            document.querySelector('header p').textContent = i18n[TimeTrackerApp.currentLang].appSubtitle;
+            
+            // 更新按钮文本
+            document.getElementById('exportDataEvanBtn').innerHTML = `<i class="fa fa-download" aria-hidden="true"></i> ${i18n[TimeTrackerApp.currentLang].exportBtnText}`;
+            document.getElementById('addRecordEvanBtn').innerHTML = `<i class="fa fa-plus" aria-hidden="true"></i> ${i18n[TimeTrackerApp.currentLang].addRecordBtnText}`;
+            document.querySelector('h3:nth-of-type(1)').innerHTML = `<i class="fa fa-list-alt text-primary" aria-hidden="true"></i> ${i18n[TimeTrackerApp.currentLang].todayRecordsTitle}`;
+            document.querySelector('#totalTimeEvan').parentNode.querySelector('span:first-child').textContent = i18n[TimeTrackerApp.currentLang].totalTimeLabel;
+            document.querySelector('#remainingTimeEvan').parentNode.querySelector('span:first-child').textContent = i18n[TimeTrackerApp.currentLang].remainingTimeLabel;
+            document.querySelector('h3:nth-of-type(2)').innerHTML = `<i class="fa fa-tags text-primary" aria-hidden="true"></i> ${i18n[TimeTrackerApp.currentLang].categoriesTitle}`;
+            document.getElementById('addCategoryEvanBtn').innerHTML = `<i class="fa fa-plus" aria-hidden="true"></i> ${i18n[TimeTrackerApp.currentLang].addCategoryBtnText}`;
+            document.querySelector('h3:nth-of-type(3)').innerHTML = `<i class="fa fa-pie-chart text-primary" aria-hidden="true"></i> ${i18n[TimeTrackerApp.currentLang].timeDistributionTitle}`;
+            document.querySelectorAll('.timeRangeBtnEvan')[0].textContent = i18n[TimeTrackerApp.currentLang].rangeDayText;
+            document.querySelectorAll('.timeRangeBtnEvan')[1].textContent = i18n[TimeTrackerApp.currentLang].rangeWeekText;
+            document.querySelectorAll('.timeRangeBtnEvan')[2].textContent = i18n[TimeTrackerApp.currentLang].rangeMonthText;
+            document.querySelector('h3:nth-of-type(4)').innerHTML = `<i class="fa fa-line-chart text-primary" aria-hidden="true"></i> ${i18n[TimeTrackerApp.currentLang].trendAnalysisTitle}`;
+            document.querySelectorAll('.trendRangeBtnEvan')[0].textContent = i18n[TimeTrackerApp.currentLang].trendWeekText;
+            document.querySelectorAll('.trendRangeBtnEvan')[1].textContent = i18n[TimeTrackerApp.currentLang].trendMonthText;
+            document.querySelectorAll('.trendRangeBtnEvan')[2].textContent = i18n[TimeTrackerApp.currentLang].trendAllText;
+            document.querySelector('h3:nth-of-type(5)').innerHTML = `<i class="fa fa-bullseye text-primary" aria-hidden="true"></i> ${i18n[TimeTrackerApp.currentLang].goalTrackingTitle}`;
+            document.getElementById('addGoalEvanBtn').innerHTML = `<i class="fa fa-plus" aria-hidden="true"></i> ${i18n[TimeTrackerApp.currentLang].addGoalBtnText}`;
+            
+            // 更新模态框文本
+            document.querySelector('#addRecordEvanModal h3').textContent = i18n[TimeTrackerApp.currentLang].addRecordModalTitle;
+            document.querySelector('#recordNameEvan').parentNode.querySelector('label').textContent = i18n[TimeTrackerApp.currentLang].recordNameLabel;
+            document.querySelector('#categorySelectEvan').parentNode.querySelector('label').textContent = i18n[TimeTrackerApp.currentLang].categoryLabel;
+            document.querySelector('#hoursEvan').parentNode.parentNode.querySelector('label').textContent = i18n[TimeTrackerApp.currentLang].durationLabel;
+            document.querySelector('#recordDateEvan').parentNode.querySelector('label').textContent = i18n[TimeTrackerApp.currentLang].dateLabel;
+            document.querySelector('#recordNotesEvan').parentNode.querySelector('label').textContent = i18n[TimeTrackerApp.currentLang].notesLabel;
+            document.getElementById('recordCancelEvanBtn').textContent = i18n[TimeTrackerApp.currentLang].cancelText;
+            document.getElementById('saveRecordEvanBtn').textContent = i18n[TimeTrackerApp.currentLang].saveText;
+            
+            document.querySelector('#addCategoryEvanModal h3').textContent = i18n[TimeTrackerApp.currentLang].addCategoryModalTitle;
+            document.querySelector('#categoryNameEvan').parentNode.querySelector('label').textContent = i18n[TimeTrackerApp.currentLang].categoryNameLabel;
+            document.querySelector('#categoryColorEvan').parentNode.querySelector('label').textContent = i18n[TimeTrackerApp.currentLang].selectColorLabel;
+            document.querySelector('#categoryIconEvan').parentNode.querySelector('label').textContent = i18n[TimeTrackerApp.currentLang].selectIconLabel;
+            document.getElementById('categoryCancelEvanBtn').textContent = i18n[TimeTrackerApp.currentLang].cancelText2;
+            document.getElementById('saveCategoryEvanBtn').textContent = i18n[TimeTrackerApp.currentLang].saveCategoryText;
+            
+            document.querySelector('#addGoalEvanModal h3').textContent = i18n[TimeTrackerApp.currentLang].addGoalModalTitle;
+            document.querySelector('#goalNameEvan').parentNode.querySelector('label').textContent = i18n[TimeTrackerApp.currentLang].goalNameLabel;
+            document.querySelector('#goalCategorySelectEvan').parentNode.querySelector('label').textContent = i18n[TimeTrackerApp.currentLang].goalCategoryLabel;
+            document.querySelector('#goalHoursEvan').parentNode.querySelector('label').textContent = i18n[TimeTrackerApp.currentLang].dailyGoalLabel;
+            document.getElementById('goalCancelEvanBtn').textContent = i18n[TimeTrackerApp.currentLang].cancelText3;
+            document.getElementById('saveGoalEvanBtn').textContent = i18n[TimeTrackerApp.currentLang].saveGoalText;
+            
+            document.querySelector('#exportDataEvanModal h3').textContent = i18n[TimeTrackerApp.currentLang].exportDataTitle;
+            document.querySelector('#exportDataEvanModal p').textContent = i18n[TimeTrackerApp.currentLang].exportDataDesc;
+            document.getElementById('exportAllJsonEvanBtn').innerHTML = `<i class="fa fa-file-code-o text-gray-700" aria-hidden="true"></i> ${i18n[TimeTrackerApp.currentLang].exportAllJsonText}`;
+            document.getElementById('exportTodayCsvEvanBtn').innerHTML = `<i class="fa fa-file-text-o text-gray-700" aria-hidden="true"></i> ${i18n[TimeTrackerApp.currentLang].exportTodayCsvText}`;
+            document.getElementById('exportWeekCsvEvanBtn').innerHTML = `<i class="fa fa-file-text-o text-gray-700" aria-hidden="true"></i> ${i18n[TimeTrackerApp.currentLang].exportWeekCsvText}`;
+            document.getElementById('exportCategoryCsvEvanBtn').innerHTML = `<i class="fa fa-file-text-o text-gray-700" aria-hidden="true"></i> ${i18n[TimeTrackerApp.currentLang].exportCategoryCsvText}`;
+            document.getElementById('exportCancelEvanBtn').textContent = i18n[TimeTrackerApp.currentLang].cancelText4;
+            
+            document.querySelector('#deleteConfirmEvanModal h3').textContent = i18n[TimeTrackerApp.currentLang].confirmDeleteTitle;
+            document.querySelector('#deleteConfirmEvanModal p').textContent = i18n[TimeTrackerApp.currentLang].confirmDeleteDesc;
+            document.getElementById('deleteCancelEvanBtn').textContent = i18n[TimeTrackerApp.currentLang].cancelText5;
+            document.getElementById('confirmDeleteEvanBtn').textContent = i18n[TimeTrackerApp.currentLang].confirmDeleteBtnText;
+            
+            // 更新语言切换按钮
+            document.getElementById('langToggleEvanBtn').textContent = i18n[TimeTrackerApp.currentLang].langText;
+        },
+        
+        // 更新本地化名称（类别和目标）- Evan水印
+        updateLocalizedNames() {
+            // 更新默认类别名称
+            if (TimeTrackerApp.dataModel.categories.length === 5) {
+                TimeTrackerApp.dataModel.categories[0].name = TimeTrackerApp.currentLang === 'zh' ? '工作' : 'Work';
+                TimeTrackerApp.dataModel.categories[1].name = TimeTrackerApp.currentLang === 'zh' ? '健康' : 'Health';
+                TimeTrackerApp.dataModel.categories[2].name = TimeTrackerApp.currentLang === 'zh' ? '学习' : 'Study';
+                TimeTrackerApp.dataModel.categories[3].name = TimeTrackerApp.currentLang === 'zh' ? '娱乐' : 'Entertainment';
+                TimeTrackerApp.dataModel.categories[4].name = TimeTrackerApp.currentLang === 'zh' ? '生活' : 'Life';
+                TimeTrackerApp.dataModel.saveCategories();
+            }
+            
+            // 更新默认目标名称
+            if (TimeTrackerApp.dataModel.goals.length === 2) {
+                TimeTrackerApp.dataModel.goals[0].name = TimeTrackerApp.currentLang === 'zh' ? '每日工作' : 'Daily Work';
+                TimeTrackerApp.dataModel.goals[1].name = TimeTrackerApp.currentLang === 'zh' ? '每日学习' : 'Daily Study';
+                TimeTrackerApp.dataModel.saveGoals();
+            }
         }
     },
     
-    // 数据导出管理器
-    exportManager: {
-        // 导出所有数据为JSON
-        exportAllData() {
-            const exportData = {
-                records: TimeTrackerApp.dataModel.records,
-                categories: TimeTrackerApp.dataModel.categories,
-                goals: TimeTrackerApp.dataModel.goals,
-                exportDate: new Date().toISOString(),
-                version: '1.0.0'
-            };
-            
-            this.downloadFile(
-                'time-tracker-export-' + this.formatDate(new Date()) + '.json',
-                'application/json',
-                JSON.stringify(exportData, null, 2)
-            );
-        },
-        
-        // 导出今日记录为CSV
-        exportDailyRecordsCSV() {
-            const records = TimeTrackerApp.dataModel.getCurrentDateRecords();
-            this.exportRecordsCSV(records, 'today');
-        },
-        
-        // 导出本周记录为CSV
-        exportWeekRecordsCSV() {
-            const now = new Date(TimeTrackerApp.dataModel.currentDate);
-            const startDate = new Date(now);
-            startDate.setDate(now.getDate() - now.getDay());
-            const endDate = new Date(now);
-            endDate.setDate(now.getDate() + (6 - now.getDay()));
-            
-            const records = TimeTrackerApp.dataModel.getRecordsInDateRange(startDate, endDate);
-            this.exportRecordsCSV(records, 'week');
-        },
-        
-        // 导出类别分布为CSV
-        exportCategoryDistributionCSV() {
-            const distribution = TimeTrackerApp.dataModel.calculateCategoryDistribution('month');
-            const headers = ['类别', '小时数', '百分比'];
-            
-            let csvContent = headers.join(',') + '\n';
-            
-            // 计算总时间
-            let totalHours = 0;
-            Object.values(distribution).forEach(hours => {
-                totalHours += hours;
-            });
-            
-            // 按时间排序
-            const sortedCategories = [...TimeTrackerApp.dataModel.categories]
-                .filter(category => (distribution[category.id] || 0) > 0)
-                .sort((a, b) => (distribution[b.id] || 0) - (distribution[a.id] || 0));
-            
-            sortedCategories.forEach(category => {
-                const hours = distribution[category.id] || 0;
-                const percentage = totalHours > 0 ? Math.round((hours / totalHours) * 100) : 0;
-                
-                const row = [
-                    this.escapeCSVValue(category.name),
-                    hours.toFixed(1),
-                    percentage + '%'
-                ];
-                
-                csvContent += row.join(',') + '\n';
-            });
-            
-            this.downloadFile(
-                `time-tracker-category-distribution-${this.formatDate(new Date())}.csv`,
-                'text/csv',
-                csvContent
-            );
-        },
-        
-        // 导出记录为CSV
-        exportRecordsCSV(records, rangeType) {
-            const headers = ['日期', '事项名称', '类别', '小时', '分钟', '备注'];
-            
-            let csvContent = headers.join(',') + '\n';
-            
-            records.forEach(record => {
-                const category = TimeTrackerApp.dataModel.getCategory(record.categoryId);
-                const row = [
-                    this.formatDate(new Date(record.date)),
-                    this.escapeCSVValue(record.name),
-                    this.escapeCSVValue(category ? category.name : ''),
-                    record.hours,
-                    record.minutes,
-                    this.escapeCSVValue(record.notes || '')
-                ];
-                
-                csvContent += row.join(',') + '\n';
-            });
-            
-            this.downloadFile(
-                `time-tracker-${rangeType}-${this.formatDate(new Date())}.csv`,
-                'text/csv',
-                csvContent
-            );
-        },
-        
-        // 下载文件
-        downloadFile(filename, contentType, content) {
-            const blob = new Blob([content], { type: contentType });
-            const url = URL.createObjectURL(blob);
-            
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            
-            setTimeout(() => {
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-            }, 0);
-        },
-        
-        // 格式化日期
-        formatDate(date) {
-            return date.toISOString().split('T')[0];
-        },
-        
-        // 转义CSV值
-        escapeCSVValue(value) {
-            if (typeof value !== 'string') {
-                return value;
-            }
-            
-            if (value.includes(',') || value.includes('"') || value.includes('\n')) {
-                return `"${value.replace(/"/g, '""')}"`;
-            }
-            
-            return value;
-        }
-    },
-    
-    // 事件处理器
+    // 事件处理器 - 管理所有用户交互 - Evan水印
     eventHandler: {
-        currentEditingId: null,
-        
-        // 初始化事件绑定
+        // 初始化事件监听 - Evan水印
         init() {
-            this.bindDateNavigation();
-            this.bindModalEvents();
-            this.bindRecordActions();
-            this.bindCategoryActions();
-            this.bindGoalActions();
-            this.bindChartRangeEvents();
-            this.bindDeleteEvents();
-            this.bindExportEvents();
-            this.bindCancelEvents();
+            this.initDateNavigation();
+            this.initRecordModals();
+            this.initCategoryModals();
+            this.initGoalModals();
+            this.initExportModal();
+            this.initDeleteModal();
+            this.initRangeButtons();
+            this.initThemeToggle();
+            this.initLanguageToggle();
         },
         
-        // 绑定日期导航事件
-        bindDateNavigation() {
+        // 初始化日期导航 - Evan水印
+        initDateNavigation() {
             document.getElementById('prevDayEvanBtn').addEventListener('click', () => {
                 TimeTrackerApp.dataModel.changeDate(-1);
-                this.updateUIAfterDateChange();
+                TimeTrackerApp.uiRenderer.renderCurrentDate();
+                TimeTrackerApp.uiRenderer.renderRecords();
+                TimeTrackerApp.uiRenderer.setRecordDateField();
+                TimeTrackerApp.uiRenderer.updateTotalTime();
+                TimeTrackerApp.uiRenderer.renderCharts();
             });
             
             document.getElementById('nextDayEvanBtn').addEventListener('click', () => {
                 TimeTrackerApp.dataModel.changeDate(1);
-                this.updateUIAfterDateChange();
+                TimeTrackerApp.uiRenderer.renderCurrentDate();
+                TimeTrackerApp.uiRenderer.renderRecords();
+                TimeTrackerApp.uiRenderer.setRecordDateField();
+                TimeTrackerApp.uiRenderer.updateTotalTime();
+                TimeTrackerApp.uiRenderer.renderCharts();
             });
         },
         
-        // 绑定模态框事件
-        bindModalEvents() {
-            // 添加记录
+        // 初始化记录模态框 - Evan水印
+        initRecordModals() {
+            // 打开添加记录模态框
             document.getElementById('addRecordEvanBtn').addEventListener('click', () => {
-                this.currentEditingId = null;
-                TimeTrackerApp.uiRenderer.clearRecordForm();
-                TimeTrackerApp.modalManager.open('addRecordEvanModal');
+                TimeTrackerApp.uiRenderer.clearModalForms();
+                TimeTrackerApp.uiRenderer.showModal('addRecordEvanModal');
             });
             
-            // 添加类别
-            document.getElementById('addCategoryEvanBtn').addEventListener('click', () => {
-                this.currentEditingId = null;
-                TimeTrackerApp.uiRenderer.clearCategoryForm();
-                TimeTrackerApp.modalManager.open('addCategoryEvanModal');
-            });
-            
-            // 添加目标
-            document.getElementById('addGoalEvanBtn').addEventListener('click', () => {
-                this.currentEditingId = null;
-                TimeTrackerApp.uiRenderer.clearGoalForm();
-                TimeTrackerApp.modalManager.open('addGoalEvanModal');
-            });
-            
-            // 导出数据
-            document.getElementById('exportDataEvanBtn').addEventListener('click', () => {
-                TimeTrackerApp.modalManager.open('exportDataEvanModal');
-            });
-            
-            // 颜色选择
-            document.querySelectorAll('.categoryColorBtnEvan').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('.categoryColorBtnEvan').forEach(b => {
-                        b.classList.remove('selected', 'ring-2', 'ring-primary', 'ring-offset-2');
-                    });
-                    btn.classList.add('selected', 'ring-2', 'ring-primary', 'ring-offset-2');
-                    document.getElementById('categoryColorEvan').value = btn.dataset.color;
-                });
-            });
-            
-            // 图标选择
-            document.querySelectorAll('.categoryIconBtnEvan').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('.categoryIconBtnEvan').forEach(b => {
-                        b.classList.remove('selected', 'ring-2', 'ring-primary', 'ring-offset-2');
-                    });
-                    btn.classList.add('selected', 'ring-2', 'ring-primary', 'ring-offset-2');
-                    document.getElementById('categoryIconEvan').value = btn.dataset.icon;
-                });
-            });
-        },
-        
-        // 绑定记录操作事件
-        bindRecordActions() {
-            document.getElementById('recordsListEvan').addEventListener('click', (e) => {
-                const editBtn = e.target.closest('.record-action-btnEvan.edit');
-                const deleteBtn = e.target.closest('.record-action-btnEvan.delete');
-                
-                if (editBtn) {
-                    const recordId = editBtn.dataset.id;
-                    this.handleEditRecord(recordId);
-                } else if (deleteBtn) {
-                    const recordId = deleteBtn.dataset.id;
-                    this.handleDeleteItem(recordId, 'record');
-                }
+            // 关闭记录模态框
+            document.getElementById('recordCancelEvanBtn').addEventListener('click', () => {
+                TimeTrackerApp.uiRenderer.hideModal('addRecordEvanModal');
             });
             
             // 保存记录
             document.getElementById('saveRecordEvanBtn').addEventListener('click', () => {
-                this.handleSaveRecord();
+                const name = document.getElementById('recordNameEvan').value.trim();
+                const categoryId = document.getElementById('categorySelectEvan').value;
+                const hours = parseInt(document.getElementById('hoursEvan').value);
+                const minutes = parseInt(document.getElementById('minutesEvan').value);
+                const date = document.getElementById('recordDateEvan').value;
+                const notes = document.getElementById('recordNotesEvan').value.trim();
+                const editId = document.getElementById('editRecordIdEvan').value;
+                
+                if (!name || !categoryId || (hours === 0 && minutes === 0)) {
+                    TimeTrackerApp.uiRenderer.showNotification(
+                        TimeTrackerApp.currentLang === 'zh' ? '请填写必要的字段' : 'Please fill in the required fields', 
+                        'error'
+                    );
+                    return;
+                }
+                
+                const recordData = { name, categoryId, hours, minutes, date, notes };
+                
+                if (editId) {
+                    // 更新现有记录
+                    TimeTrackerApp.dataModel.updateRecord(editId, recordData);
+                    TimeTrackerApp.uiRenderer.showNotification(
+                        TimeTrackerApp.currentLang === 'zh' ? '记录已更新' : 'Record updated'
+                    );
+                } else {
+                    // 添加新记录
+                    TimeTrackerApp.dataModel.addRecord(recordData);
+                    TimeTrackerApp.uiRenderer.showNotification(
+                        TimeTrackerApp.currentLang === 'zh' ? '记录已添加' : 'Record added'
+                    );
+                }
+                
+                TimeTrackerApp.uiRenderer.hideModal('addRecordEvanModal');
+                TimeTrackerApp.uiRenderer.renderRecords();
+                TimeTrackerApp.uiRenderer.updateTotalTime();
+                TimeTrackerApp.uiRenderer.renderCharts();
+            });
+            
+            // 编辑记录
+            document.getElementById('recordsListEvan').addEventListener('click', (e) => {
+                if (e.target.closest('.editRecordEvanBtn')) {
+                    const id = e.target.closest('.editRecordEvanBtn').dataset.id;
+                    const record = TimeTrackerApp.dataModel.records.find(r => r.id === id);
+                    
+                    if (record) {
+                        document.getElementById('recordNameEvan').value = record.name;
+                        document.getElementById('categorySelectEvan').value = record.categoryId;
+                        document.getElementById('hoursEvan').value = record.hours;
+                        document.getElementById('minutesEvan').value = record.minutes;
+                        document.getElementById('recordDateEvan').value = record.date.split('T')[0];
+                        document.getElementById('recordNotesEvan').value = record.notes || '';
+                        document.getElementById('editRecordIdEvan').value = id;
+                        
+                        TimeTrackerApp.uiRenderer.showModal('addRecordEvanModal');
+                    }
+                }
+                
+                // 删除记录
+                if (e.target.closest('.deleteRecordEvanBtn')) {
+                    const id = e.target.closest('.deleteRecordEvanBtn').dataset.id;
+                    const type = e.target.closest('.deleteRecordEvanBtn').dataset.type;
+                    
+                    document.getElementById('deleteItemIdEvan').value = id;
+                    document.getElementById('deleteItemTypeEvan').value = type;
+                    TimeTrackerApp.uiRenderer.showModal('deleteConfirmEvanModal');
+                }
             });
         },
         
-        // 绑定类别操作事件
-        bindCategoryActions() {
-            document.getElementById('categoriesListEvan').addEventListener('click', (e) => {
-                const editBtn = e.target.closest('.category-action-btnEvan.edit');
-                const deleteBtn = e.target.closest('.category-action-btnEvan.delete');
-                
-                if (editBtn) {
-                    const categoryId = editBtn.dataset.id;
-                    this.handleEditCategory(categoryId);
-                } else if (deleteBtn) {
-                    const categoryId = deleteBtn.dataset.id;
-                    this.handleDeleteItem(categoryId, 'category');
-                }
+        // 初始化类别模态框 - Evan水印
+        initCategoryModals() {
+            // 打开添加类别模态框
+            document.getElementById('addCategoryEvanBtn').addEventListener('click', () => {
+                TimeTrackerApp.uiRenderer.clearModalForms();
+                document.getElementById('addCategoryEvanModal').querySelector('h3').textContent = i18n[TimeTrackerApp.currentLang].addCategoryModalTitle;
+                document.getElementById('editCategoryIdEvan').value = '';
+                TimeTrackerApp.uiRenderer.showModal('addCategoryEvanModal');
+            });
+            
+            // 关闭类别模态框
+            document.getElementById('categoryCancelEvanBtn').addEventListener('click', () => {
+                TimeTrackerApp.uiRenderer.hideModal('addCategoryEvanModal');
             });
             
             // 保存类别
             document.getElementById('saveCategoryEvanBtn').addEventListener('click', () => {
-                this.handleSaveCategory();
+                const name = document.getElementById('categoryNameEvan').value.trim();
+                const color = document.getElementById('categoryColorEvan').value;
+                const icon = document.getElementById('categoryIconEvan').value;
+                const editId = document.getElementById('editCategoryIdEvan').value;
+                
+                if (!name || !color || !icon) {
+                    TimeTrackerApp.uiRenderer.showNotification(
+                        TimeTrackerApp.currentLang === 'zh' ? '请填写必要的字段' : 'Please fill in the required fields', 
+                        'error'
+                    );
+                    return;
+                }
+                
+                const categoryData = { name, color, icon };
+                
+                if (editId) {
+                    // 更新现有类别
+                    TimeTrackerApp.dataModel.updateCategory(editId, categoryData);
+                    TimeTrackerApp.uiRenderer.showNotification(
+                        TimeTrackerApp.currentLang === 'zh' ? '类别已更新' : 'Category updated'
+                    );
+                } else {
+                    // 添加新类别
+                    TimeTrackerApp.dataModel.addCategory(categoryData);
+                    TimeTrackerApp.uiRenderer.showNotification(
+                        TimeTrackerApp.currentLang === 'zh' ? '类别已添加' : 'Category added'
+                    );
+                }
+                
+                TimeTrackerApp.uiRenderer.hideModal('addCategoryEvanModal');
+                TimeTrackerApp.uiRenderer.renderCategories();
+                TimeTrackerApp.uiRenderer.populateCategorySelectors();
+                TimeTrackerApp.uiRenderer.renderGoals();
+                TimeTrackerApp.uiRenderer.renderCharts();
+            });
+            
+            // 颜色选择按钮
+            document.querySelectorAll('.categoryColorBtnEvan').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.categoryColorBtnEvan').forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    document.getElementById('categoryColorEvan').value = btn.dataset.color;
+                });
+            });
+            
+            // 图标选择按钮
+            document.querySelectorAll('.categoryIconBtnEvan').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.categoryIconBtnEvan').forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    document.getElementById('categoryIconEvan').value = btn.dataset.icon;
+                });
+            });
+            
+            // 编辑和删除类别
+            document.getElementById('categoriesListEvan').addEventListener('click', (e) => {
+                if (e.target.closest('.editCategoryEvanBtn')) {
+                    const id = e.target.closest('.editCategoryEvanBtn').dataset.id;
+                    const category = TimeTrackerApp.dataModel.getCategory(id);
+                    
+                    if (category) {
+                        document.getElementById('categoryNameEvan').value = category.name;
+                        document.getElementById('categoryColorEvan').value = category.color;
+                        document.getElementById('categoryIconEvan').value = category.icon;
+                        document.getElementById('editCategoryIdEvan').value = id;
+                        
+                        // 更新选中状态
+                        document.querySelectorAll('.categoryColorBtnEvan').forEach(b => b.classList.remove('selected'));
+                        document.querySelectorAll('.categoryIconBtnEvan').forEach(b => b.classList.remove('selected'));
+                        document.querySelector(`.categoryColorBtnEvan[data-color="${category.color}"]`).classList.add('selected');
+                        document.querySelector(`.categoryIconBtnEvan[data-icon="${category.icon}"]`).classList.add('selected');
+                        
+                        document.getElementById('addCategoryEvanModal').querySelector('h3').textContent = TimeTrackerApp.currentLang === 'zh' ? '编辑类别' : 'Edit Category';
+                        TimeTrackerApp.uiRenderer.showModal('addCategoryEvanModal');
+                    }
+                }
+                
+                if (e.target.closest('.deleteCategoryEvanBtn')) {
+                    const id = e.target.closest('.deleteCategoryEvanBtn').dataset.id;
+                    const type = e.target.closest('.deleteCategoryEvanBtn').dataset.type;
+                    
+                    document.getElementById('deleteItemIdEvan').value = id;
+                    document.getElementById('deleteItemTypeEvan').value = type;
+                    TimeTrackerApp.uiRenderer.showModal('deleteConfirmEvanModal');
+                }
             });
         },
         
-        // 绑定目标操作事件
-        bindGoalActions() {
-            document.getElementById('goalsListEvan').addEventListener('click', (e) => {
-                const deleteBtn = e.target.closest('.goal-action-btnEvan.delete');
-                
-                if (deleteBtn) {
-                    const goalId = deleteBtn.dataset.id;
-                    this.handleDeleteItem(goalId, 'goal');
-                }
+        // 初始化目标模态框 - Evan水印
+        initGoalModals() {
+            // 打开添加目标模态框
+            document.getElementById('addGoalEvanBtn').addEventListener('click', () => {
+                TimeTrackerApp.uiRenderer.clearModalForms();
+                document.getElementById('addGoalEvanModal').querySelector('h3').textContent = i18n[TimeTrackerApp.currentLang].addGoalModalTitle;
+                document.getElementById('editGoalIdEvan').value = '';
+                TimeTrackerApp.uiRenderer.showModal('addGoalEvanModal');
+            });
+            
+            // 关闭目标模态框
+            document.getElementById('goalCancelEvanBtn').addEventListener('click', () => {
+                TimeTrackerApp.uiRenderer.hideModal('addGoalEvanModal');
             });
             
             // 保存目标
             document.getElementById('saveGoalEvanBtn').addEventListener('click', () => {
-                this.handleSaveGoal();
+                const name = document.getElementById('goalNameEvan').value.trim();
+                const categoryId = document.getElementById('goalCategorySelectEvan').value;
+                const targetHours = parseFloat(document.getElementById('goalHoursEvan').value);
+                const editId = document.getElementById('editGoalIdEvan').value;
+                
+                if (!name || !categoryId || !targetHours || targetHours <= 0) {
+                    TimeTrackerApp.uiRenderer.showNotification(
+                        TimeTrackerApp.currentLang === 'zh' ? '请填写必要的字段' : 'Please fill in the required fields', 
+                        'error'
+                    );
+                    return;
+                }
+                
+                const goalData = { name, categoryId, targetHours };
+                
+                if (editId) {
+                    // 更新现有目标
+                    TimeTrackerApp.dataModel.updateGoal(editId, goalData);
+                    TimeTrackerApp.uiRenderer.showNotification(
+                        TimeTrackerApp.currentLang === 'zh' ? '目标已更新' : 'Goal updated'
+                    );
+                } else {
+                    // 添加新目标
+                    TimeTrackerApp.dataModel.addGoal(goalData);
+                    TimeTrackerApp.uiRenderer.showNotification(
+                        TimeTrackerApp.currentLang === 'zh' ? '目标已添加' : 'Goal added'
+                    );
+                }
+                
+                TimeTrackerApp.uiRenderer.hideModal('addGoalEvanModal');
+                TimeTrackerApp.uiRenderer.renderGoals();
+            });
+            
+            // 编辑和删除目标
+            document.getElementById('goalsListEvan').addEventListener('click', (e) => {
+                if (e.target.closest('.editGoalEvanBtn')) {
+                    const id = e.target.closest('.editGoalEvanBtn').dataset.id;
+                    const goal = TimeTrackerApp.dataModel.goals.find(g => g.id === id);
+                    
+                    if (goal) {
+                        document.getElementById('goalNameEvan').value = goal.name;
+                        document.getElementById('goalCategorySelectEvan').value = goal.categoryId;
+                        document.getElementById('goalHoursEvan').value = goal.targetHours;
+                        document.getElementById('editGoalIdEvan').value = id;
+                        
+                        document.getElementById('addGoalEvanModal').querySelector('h3').textContent = TimeTrackerApp.currentLang === 'zh' ? '编辑目标' : 'Edit Goal';
+                        TimeTrackerApp.uiRenderer.showModal('addGoalEvanModal');
+                    }
+                }
+                
+                if (e.target.closest('.deleteGoalEvanBtn')) {
+                    const id = e.target.closest('.deleteGoalEvanBtn').dataset.id;
+                    const type = e.target.closest('.deleteGoalEvanBtn').dataset.type;
+                    
+                    document.getElementById('deleteItemIdEvan').value = id;
+                    document.getElementById('deleteItemTypeEvan').value = type;
+                    TimeTrackerApp.uiRenderer.showModal('deleteConfirmEvanModal');
+                }
             });
         },
         
-        // 绑定图表范围事件
-        bindChartRangeEvents() {
-            // 时间分配图表
+        // 初始化导出模态框 - Evan水印
+        initExportModal() {
+            // 打开导出模态框
+            document.getElementById('exportDataEvanBtn').addEventListener('click', () => {
+                TimeTrackerApp.uiRenderer.showModal('exportDataEvanModal');
+            });
+            
+            // 关闭导出模态框
+            document.getElementById('exportCancelEvanBtn').addEventListener('click', () => {
+                TimeTrackerApp.uiRenderer.hideModal('exportDataEvanModal');
+            });
+            
+            // 导出所有数据为JSON
+            document.getElementById('exportAllJsonEvanBtn').addEventListener('click', () => {
+                const data = {
+                    records: TimeTrackerApp.dataModel.records,
+                    categories: TimeTrackerApp.dataModel.categories,
+                    goals: TimeTrackerApp.dataModel.goals,
+                    exportDate: new Date().toISOString()
+                };
+                
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `time-tracker-export-${new Date().toISOString().split('T')[0]}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+                
+                TimeTrackerApp.uiRenderer.hideModal('exportDataEvanModal');
+                TimeTrackerApp.uiRenderer.showNotification(
+                    TimeTrackerApp.currentLang === 'zh' ? '数据已导出' : 'Data exported'
+                );
+            });
+            
+            // 导出今日记录为CSV
+            document.getElementById('exportTodayCsvEvanBtn').addEventListener('click', () => {
+                this.exportRecordsAsCsv('day');
+            });
+            
+            // 导出本周记录为CSV
+            document.getElementById('exportWeekCsvEvanBtn').addEventListener('click', () => {
+                this.exportRecordsAsCsv('week');
+            });
+            
+            // 导出类别分布为CSV
+            document.getElementById('exportCategoryCsvEvanBtn').addEventListener('click', () => {
+                const distribution = TimeTrackerApp.dataModel.calculateCategoryDistribution('month');
+                let csv = TimeTrackerApp.currentLang === 'zh' ? '类别,时长(小时),百分比\n' : 'Category,Hours,Percentage\n';
+                
+                const total = Object.values(distribution).reduce((a, b) => a + b, 0);
+                
+                Object.keys(distribution).forEach(categoryId => {
+                    const category = TimeTrackerApp.dataModel.getCategory(categoryId);
+                    if (!category) return;
+                    
+                    const hours = distribution[categoryId];
+                    const percentage = total > 0 ? Math.round((hours / total) * 100) : 0;
+                    
+                    csv += `"${category.name}",${hours.toFixed(1)},${percentage}%\n`;
+                });
+                
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `time-tracker-categories-${new Date().toISOString().split('T')[0]}.csv`;
+                a.click();
+                URL.revokeObjectURL(url);
+                
+                TimeTrackerApp.uiRenderer.hideModal('exportDataEvanModal');
+                TimeTrackerApp.uiRenderer.showNotification(
+                    TimeTrackerApp.currentLang === 'zh' ? '类别分布已导出' : 'Category distribution exported'
+                );
+            });
+        },
+        
+        // 导出记录为CSV - Evan水印
+        exportRecordsAsCsv(range) {
+            let startDate, endDate;
+            const now = new Date(TimeTrackerApp.dataModel.currentDate);
+            
+            switch (range) {
+                case 'day':
+                    startDate = new Date(now);
+                    endDate = new Date(now);
+                    break;
+                case 'week':
+                    startDate = new Date(now);
+                    startDate.setDate(now.getDate() - now.getDay());
+                    endDate = new Date(now);
+                    endDate.setDate(now.getDate() + (6 - now.getDay()));
+                    break;
+                default:
+                    startDate = new Date(now);
+                    endDate = new Date(now);
+            }
+            
+            const records = TimeTrackerApp.dataModel.getRecordsInDateRange(startDate, endDate);
+            
+            let csv = TimeTrackerApp.currentLang === 'zh' ? '日期,事项,类别,时长(小时),备注\n' : 'Date,Record,Category,Hours,Notes\n';
+            
+            records.forEach(record => {
+                const category = TimeTrackerApp.dataModel.getCategory(record.categoryId);
+                const categoryName = category ? category.name : '';
+                const hours = (record.hours + record.minutes / 60).toFixed(1);
+                const date = record.date.split('T')[0];
+                
+                csv += `"${date}","${record.name}","${categoryName}",${hours},"${record.notes || ''}"\n`;
+            });
+            
+            const rangeText = range === 'day' ? TimeTrackerApp.currentLang === 'zh' ? '今日' : 'today' : TimeTrackerApp.currentLang === 'zh' ? '本周' : 'this-week';
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `time-tracker-records-${rangeText}-${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            TimeTrackerApp.uiRenderer.hideModal('exportDataEvanModal');
+            TimeTrackerApp.uiRenderer.showNotification(
+                TimeTrackerApp.currentLang === 'zh' ? `${range === 'day' ? '今日' : '本周'}记录已导出` : `${range === 'day' ? 'Today\'s' : 'This week\'s'} records exported`
+            );
+        },
+        
+        // 初始化删除确认模态框 - Evan水印
+        initDeleteModal() {
+            // 取消删除
+            document.getElementById('deleteCancelEvanBtn').addEventListener('click', () => {
+                TimeTrackerApp.uiRenderer.hideModal('deleteConfirmEvanModal');
+            });
+            
+            // 确认删除
+            document.getElementById('confirmDeleteEvanBtn').addEventListener('click', () => {
+                const id = document.getElementById('deleteItemIdEvan').value;
+                const type = document.getElementById('deleteItemTypeEvan').value;
+                let success = false;
+                let message = '';
+                
+                switch (type) {
+                    case 'record':
+                        success = TimeTrackerApp.dataModel.deleteRecord(id);
+                        message = success 
+                            ? (TimeTrackerApp.currentLang === 'zh' ? '记录已删除' : 'Record deleted')
+                            : (TimeTrackerApp.currentLang === 'zh' ? '删除失败' : 'Deletion failed');
+                        break;
+                    case 'category':
+                        const result = TimeTrackerApp.dataModel.deleteCategory(id);
+                        success = result.success;
+                        message = success 
+                            ? (TimeTrackerApp.currentLang === 'zh' ? '类别已删除' : 'Category deleted')
+                            : result.reason || (TimeTrackerApp.currentLang === 'zh' ? '删除失败' : 'Deletion failed');
+                        break;
+                    case 'goal':
+                        success = TimeTrackerApp.dataModel.deleteGoal(id);
+                        message = success 
+                            ? (TimeTrackerApp.currentLang === 'zh' ? '目标已删除' : 'Goal deleted')
+                            : (TimeTrackerApp.currentLang === 'zh' ? '删除失败' : 'Deletion failed');
+                        break;
+                }
+                
+                TimeTrackerApp.uiRenderer.hideModal('deleteConfirmEvanModal');
+                TimeTrackerApp.uiRenderer.showNotification(message, success ? 'success' : 'error');
+                
+                if (success) {
+                    if (type === 'record' || type === 'category') {
+                        TimeTrackerApp.uiRenderer.renderRecords();
+                        TimeTrackerApp.uiRenderer.updateTotalTime();
+                        TimeTrackerApp.uiRenderer.renderCharts();
+                    }
+                    if (type === 'category' || type === 'goal') {
+                        TimeTrackerApp.uiRenderer.renderCategories();
+                        TimeTrackerApp.uiRenderer.populateCategorySelectors();
+                    }
+                    if (type === 'category' || type === 'goal') {
+                        TimeTrackerApp.uiRenderer.renderGoals();
+                    }
+                }
+            });
+        },
+        
+        // 初始化范围按钮 - Evan水印
+        initRangeButtons() {
+            // 时间分布范围按钮
             document.querySelectorAll('.timeRangeBtnEvan').forEach(btn => {
                 btn.addEventListener('click', () => {
-                    document.querySelectorAll('.timeRangeBtnEvan').forEach(b => {
-                        b.classList.remove('active', 'bg-primary', 'text-white');
-                        b.classList.add('bg-gray-100');
-                    });
-                    btn.classList.add('active', 'bg-primary', 'text-white');
-                    btn.classList.remove('bg-gray-100');
-                    
-                    const range = btn.dataset.range;
-                    TimeTrackerApp.chartManager.renderTimeDistributionChart(range);
-                    TimeTrackerApp.uiRenderer.renderCategoryDistribution(range);
+                    document.querySelectorAll('.timeRangeBtnEvan').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    TimeTrackerApp.uiRenderer.renderTimeDistributionChart();
                 });
             });
             
-            // 趋势分析图表
+            // 趋势分析范围按钮
             document.querySelectorAll('.trendRangeBtnEvan').forEach(btn => {
                 btn.addEventListener('click', () => {
-                    document.querySelectorAll('.trendRangeBtnEvan').forEach(b => {
-                        b.classList.remove('active', 'bg-primary', 'text-white');
-                        b.classList.add('bg-gray-100');
-                    });
-                    btn.classList.add('active', 'bg-primary', 'text-white');
-                    btn.classList.remove('bg-gray-100');
-                    
-                    const range = btn.dataset.range;
-                    TimeTrackerApp.chartManager.renderTrendAnalysisChart(range);
+                    document.querySelectorAll('.trendRangeBtnEvan').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    TimeTrackerApp.uiRenderer.renderTrendAnalysisChart();
                 });
             });
         },
         
-        // 绑定删除事件
-        bindDeleteEvents() {
-            document.getElementById('confirmDeleteEvanBtn').addEventListener('click', () => {
-                const itemId = document.getElementById('deleteItemIdEvan').value;
-                const itemType = document.getElementById('deleteItemTypeEvan').value;
-                
-                if (itemId && itemType) {
-                    this.processDeletion(itemId, itemType);
-                }
+        // 初始化主题切换 - Evan水印
+        initThemeToggle() {
+            document.getElementById('themeToggleEvanBtn').addEventListener('click', () => {
+                TimeTrackerApp.uiRenderer.toggleTheme();
             });
         },
         
-        // 绑定导出事件
-        bindExportEvents() {
-            document.getElementById('exportAllJsonEvanBtn').addEventListener('click', () => {
-                TimeTrackerApp.exportManager.exportAllData();
-                TimeTrackerApp.modalManager.close('exportDataEvanModal');
-                TimeTrackerApp.notificationManager.show('所有数据已导出为JSON格式');
+        // 初始化语言切换 - Evan水印
+        initLanguageToggle() {
+            document.getElementById('langToggleEvanBtn').addEventListener('click', () => {
+                TimeTrackerApp.uiRenderer.toggleLanguage();
             });
-            
-            document.getElementById('exportTodayCsvEvanBtn').addEventListener('click', () => {
-                TimeTrackerApp.exportManager.exportDailyRecordsCSV();
-                TimeTrackerApp.modalManager.close('exportDataEvanModal');
-                TimeTrackerApp.notificationManager.show('今日记录已导出为CSV格式');
-            });
-            
-            document.getElementById('exportWeekCsvEvanBtn').addEventListener('click', () => {
-                TimeTrackerApp.exportManager.exportWeekRecordsCSV();
-                TimeTrackerApp.modalManager.close('exportDataEvanModal');
-                TimeTrackerApp.notificationManager.show('本周记录已导出为CSV格式');
-            });
-            
-            document.getElementById('exportCategoryCsvEvanBtn').addEventListener('click', () => {
-                TimeTrackerApp.exportManager.exportCategoryDistributionCSV();
-                TimeTrackerApp.modalManager.close('exportDataEvanModal');
-                TimeTrackerApp.notificationManager.show('类别分布已导出为CSV格式');
-            });
-        },
-        
-        // 绑定取消按钮事件
-        bindCancelEvents() {
-            // 记录表单取消
-            document.getElementById('recordCancelEvanBtn').addEventListener('click', () => {
-                TimeTrackerApp.modalManager.close('addRecordEvanModal');
-            });
-            
-            // 类别表单取消
-            document.getElementById('categoryCancelEvanBtn').addEventListener('click', () => {
-                TimeTrackerApp.modalManager.close('addCategoryEvanModal');
-            });
-            
-            // 目标表单取消
-            document.getElementById('goalCancelEvanBtn').addEventListener('click', () => {
-                TimeTrackerApp.modalManager.close('addGoalEvanModal');
-            });
-            
-            // 导出取消
-            document.getElementById('exportCancelEvanBtn').addEventListener('click', () => {
-                TimeTrackerApp.modalManager.close('exportDataEvanModal');
-            });
-            
-            // 删除取消
-            document.getElementById('deleteCancelEvanBtn').addEventListener('click', () => {
-                TimeTrackerApp.modalManager.close('deleteConfirmEvanModal');
-            });
-        },
-        
-        // 处理记录编辑
-        handleEditRecord(recordId) {
-            const record = TimeTrackerApp.dataModel.records.find(r => r.id === recordId);
-            if (!record) return;
-            
-            this.currentEditingId = recordId;
-            
-            // 填充表单
-            document.getElementById('recordNameEvan').value = record.name || '';
-            document.getElementById('categorySelectEvan').value = record.categoryId || '';
-            document.getElementById('hoursEvan').value = record.hours || '0';
-            document.getElementById('minutesEvan').value = record.minutes || '0';
-            document.getElementById('recordNotesEvan').value = record.notes || '';
-            
-            TimeTrackerApp.modalManager.open('addRecordEvanModal');
-        },
-        
-        // 处理类别编辑
-        handleEditCategory(categoryId) {
-            const category = TimeTrackerApp.dataModel.getCategory(categoryId);
-            if (!category) return;
-            
-            this.currentEditingId = categoryId;
-            
-            // 填充表单
-            document.getElementById('categoryNameEvan').value = category.name || '';
-            document.getElementById('categoryColorEvan').value = category.color || '#6366f1';
-            document.getElementById('categoryIconEvan').value = category.icon || 'briefcase';
-            
-            // 更新选择状态
-            document.querySelectorAll('.categoryColorBtnEvan').forEach(btn => {
-                btn.classList.remove('selected', 'ring-2', 'ring-primary', 'ring-offset-2');
-                if (btn.dataset.color === category.color) {
-                    btn.classList.add('selected', 'ring-2', 'ring-primary', 'ring-offset-2');
-                }
-            });
-            
-            document.querySelectorAll('.categoryIconBtnEvan').forEach(btn => {
-                btn.classList.remove('selected', 'ring-2', 'ring-primary', 'ring-offset-2');
-                if (btn.dataset.icon === category.icon) {
-                    btn.classList.add('selected', 'ring-2', 'ring-primary', 'ring-offset-2');
-                }
-            });
-            
-            TimeTrackerApp.modalManager.open('addCategoryEvanModal');
-        },
-        
-        // 处理删除确认
-        handleDeleteItem(itemId, itemType) {
-            document.getElementById('deleteItemIdEvan').value = itemId;
-            document.getElementById('deleteItemTypeEvan').value = itemType;
-            TimeTrackerApp.modalManager.open('deleteConfirmEvanModal');
-        },
-        
-        // 执行删除操作
-        processDeletion(itemId, itemType) {
-            let success = false;
-            let message = '';
-            
-            switch (itemType) {
-                case 'record':
-                    success = TimeTrackerApp.dataModel.deleteRecord(itemId);
-                    message = success ? '时间记录已删除' : '删除失败';
-                    break;
-                case 'category':
-                    const result = TimeTrackerApp.dataModel.deleteCategory(itemId);
-                    success = result.success;
-                    message = success ? '类别已删除' : result.reason || '删除失败';
-                    break;
-                case 'goal':
-                    success = TimeTrackerApp.dataModel.deleteGoal(itemId);
-                    message = success ? '目标已删除' : '删除失败';
-                    break;
-            }
-            
-            if (success) {
-                TimeTrackerApp.modalManager.close('deleteConfirmEvanModal');
-                this.updateUIAfterDataChange();
-                TimeTrackerApp.notificationManager.show(message);
-            } else {
-                TimeTrackerApp.notificationManager.show(message, 'error');
-            }
-        },
-        
-        // 处理记录保存
-        handleSaveRecord() {
-            const name = document.getElementById('recordNameEvan').value.trim();
-            const categoryId = document.getElementById('categorySelectEvan').value;
-            const hours = document.getElementById('hoursEvan').value;
-            const minutes = document.getElementById('minutesEvan').value;
-            const notes = document.getElementById('recordNotesEvan').value.trim();
-            
-            // 验证
-            if (!name) {
-                TimeTrackerApp.notificationManager.show('请输入事项名称', 'error');
-                return;
-            }
-            
-            if (!categoryId) {
-                TimeTrackerApp.notificationManager.show('请选择类别', 'error');
-                return;
-            }
-            
-            if (parseInt(hours) === 0 && parseInt(minutes) === 0) {
-                TimeTrackerApp.notificationManager.show('时长不能为0', 'error');
-                return;
-            }
-            
-            const recordData = {
-                name,
-                categoryId,
-                hours: parseInt(hours),
-                minutes: parseInt(minutes),
-                notes,
-                date: TimeTrackerApp.dataModel.currentDate.toISOString()
-            };
-            
-            let success = false;
-            let message = '';
-            
-            if (this.currentEditingId) {
-                success = TimeTrackerApp.dataModel.updateRecord(this.currentEditingId, recordData) !== null;
-                message = success ? '时间记录已更新' : '更新失败';
-            } else {
-                success = TimeTrackerApp.dataModel.addRecord(recordData) !== null;
-                message = success ? '时间记录已添加' : '添加失败';
-            }
-            
-            if (success) {
-                TimeTrackerApp.modalManager.close('addRecordEvanModal');
-                TimeTrackerApp.uiRenderer.clearRecordForm();
-                this.updateUIAfterDataChange();
-                TimeTrackerApp.notificationManager.show(message);
-            } else {
-                TimeTrackerApp.notificationManager.show(message, 'error');
-            }
-        },
-        
-        // 处理类别保存
-        handleSaveCategory() {
-            const name = document.getElementById('categoryNameEvan').value.trim();
-            const color = document.getElementById('categoryColorEvan').value;
-            const icon = document.getElementById('categoryIconEvan').value;
-            
-            if (!name) {
-                TimeTrackerApp.notificationManager.show('请输入类别名称', 'error');
-                return;
-            }
-            
-            const categoryData = { name, color, icon };
-            let success = false;
-            let message = '';
-            
-            if (this.currentEditingId) {
-                success = TimeTrackerApp.dataModel.updateCategory(this.currentEditingId, categoryData) !== null;
-                message = success ? '类别已更新' : '更新失败';
-            } else {
-                success = TimeTrackerApp.dataModel.addCategory(categoryData) !== null;
-                message = success ? '类别已添加' : '添加失败';
-            }
-            
-            if (success) {
-                TimeTrackerApp.modalManager.close('addCategoryEvanModal');
-                TimeTrackerApp.uiRenderer.clearCategoryForm();
-                this.updateUIAfterDataChange();
-                TimeTrackerApp.notificationManager.show(message);
-            } else {
-                TimeTrackerApp.notificationManager.show(message, 'error');
-            }
-        },
-        
-        // 处理目标保存
-        handleSaveGoal() {
-            const name = document.getElementById('goalNameEvan').value.trim();
-            const categoryId = document.getElementById('goalCategorySelectEvan').value;
-            const targetHours = parseFloat(document.getElementById('goalHoursEvan').value);
-            
-            if (!name) {
-                TimeTrackerApp.notificationManager.show('请输入目标名称', 'error');
-                return;
-            }
-            
-            if (!categoryId) {
-                TimeTrackerApp.notificationManager.show('请选择类别', 'error');
-                return;
-            }
-            
-            if (isNaN(targetHours) || targetHours <= 0) {
-                TimeTrackerApp.notificationManager.show('请输入有效的目标时长', 'error');
-                return;
-            }
-            
-            const goalData = { name, categoryId, targetHours };
-            let success = false;
-            let message = '';
-            
-            if (this.currentEditingId) {
-                success = TimeTrackerApp.dataModel.updateGoal(this.currentEditingId, goalData) !== null;
-                message = success ? '目标已更新' : '更新失败';
-            } else {
-                success = TimeTrackerApp.dataModel.addGoal(goalData) !== null;
-                message = success ? '目标已添加' : '添加失败';
-            }
-            
-            if (success) {
-                TimeTrackerApp.modalManager.close('addGoalEvanModal');
-                TimeTrackerApp.uiRenderer.clearGoalForm();
-                this.updateUIAfterDataChange();
-                TimeTrackerApp.notificationManager.show(message);
-            } else {
-                TimeTrackerApp.notificationManager.show(message, 'error');
-            }
-        },
-        
-        // 日期变更后更新UI
-        updateUIAfterDateChange() {
-            TimeTrackerApp.uiRenderer.renderCurrentDate();
-            TimeTrackerApp.uiRenderer.renderRecords();
-            TimeTrackerApp.uiRenderer.renderCategoryDistribution();
-            TimeTrackerApp.uiRenderer.renderSummaryStats();
-            TimeTrackerApp.uiRenderer.updateRecordDateField();
-            TimeTrackerApp.chartManager.renderTimeDistributionChart();
-        },
-        
-        // 数据变更后更新UI
-        updateUIAfterDataChange() {
-            TimeTrackerApp.uiRenderer.renderRecords();
-            TimeTrackerApp.uiRenderer.renderCategories();
-            TimeTrackerApp.uiRenderer.renderGoals();
-            TimeTrackerApp.uiRenderer.renderCategoryDistribution();
-            TimeTrackerApp.uiRenderer.renderSummaryStats();
-            TimeTrackerApp.uiRenderer.populateCategorySelectors();
-            TimeTrackerApp.chartManager.renderTimeDistributionChart();
-            TimeTrackerApp.chartManager.renderTrendAnalysisChart();
         }
     },
     
-    // 初始化应用
+    // 初始化应用 - Evan水印
     init() {
         this.dataModel.init();
         this.uiRenderer.init();
-        this.chartManager.init();
         this.eventHandler.init();
     }
 };
 
-// 页面加载完成后初始化应用
-window.addEventListener('DOMContentLoaded', () => {
+// 页面加载完成后初始化应用 - Evan水印
+document.addEventListener('DOMContentLoaded', () => {
     TimeTrackerApp.init();
 });
