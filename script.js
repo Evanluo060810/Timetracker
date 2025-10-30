@@ -10,6 +10,135 @@ let selectedRecordId = null; // 当前选中的记录ID（用于编辑或删除�
 let timeDistributionChart = null; // 时间分配饼图
 let trendAnalysisChart = null; // 趋势分析柱状图
 
+// 语言包
+const translations = {
+  zh: {
+    subtitle: '高效管理你的每一分钟',
+    add_record: '添加时间记录',
+    today_records: '今日时间记录',
+    today_total: '今日总计',
+    remaining_time: '剩余清醒时间',
+    category_management: '类别管理',
+    new_category_placeholder: '输入新类别名称',
+    time_distribution: '时间分配',
+    today: '今日',
+    this_week: '本周',
+    this_month: '本月',
+    trend_analysis: '趋势分析',
+    all_time: '全部',
+    goal_tracking: '目标追踪',
+    add_goal: '添加目标',
+    add_record_title: '添加时间记录',
+    record_name: '事项名称',
+    record_name_placeholder: '请输入事项名称',
+    record_category: '所属类别',
+    duration: '时长',
+    hours: '小时',
+    minutes: '分钟',
+    date: '日期',
+    notes_optional: '备注（可选）',
+    notes_placeholder: '请输入备注信息',
+    cancel: '取消',
+    save_record: '保存记录',
+    add_goal_title: '添加目标',
+    goal_name: '目标名称',
+    goal_name_placeholder: '请输入目标名称',
+    goal_category: '所属类别',
+    daily_goal_duration: '目标时长（每天）',
+    save_goal: '保存目标',
+    confirm_delete: '确认删除',
+    delete_confirmation: '你确定要删除这条记录吗？此操作无法撤销。',
+    delete: '删除',
+    operation_success: '操作成功！',
+    record_updated: '记录已更新',
+    record_added: '记录已添加',
+    category_added: '类别已添加',
+    category_deleted: '类别已删除',
+    goal_added: '目标已添加',
+    goal_deleted: '目标已删除',
+    no_records_today: '今天还没有记录',
+    click_to_add_record: '点击"添加时间记录"开始记录你的时间',
+    no_goals: '还没有设置目标',
+    click_to_add_goal: '点击"添加目标"开始设置你的每日目标',
+    please_enter_name: '请输入事项名称',
+    please_set_duration: '请设置时长',
+    total_exceeds_18h: '每天总时长不能超过18小时',
+    please_enter_category_name: '请输入类别名称',
+    category_already_exists: '该类别已存在',
+    cannot_delete_used_category: '无法删除正在使用的类别',
+    please_enter_goal_name: '请输入目标名称',
+    please_set_goal_duration: '请设置目标时长'
+  },
+  en: {
+    subtitle: 'Efficiently manage every minute of your time',
+    add_record: 'Add Time Record',
+    today_records: 'Today\'s Time Records',
+    today_total: 'Today\'s Total',
+    remaining_time: 'Remaining Awake Time',
+    category_management: 'Category Management',
+    new_category_placeholder: 'Enter new category name',
+    time_distribution: 'Time Distribution',
+    today: 'Today',
+    this_week: 'This Week',
+    this_month: 'This Month',
+    trend_analysis: 'Trend Analysis',
+    all_time: 'All Time',
+    goal_tracking: 'Goal Tracking',
+    add_goal: 'Add Goal',
+    add_record_title: 'Add Time Record',
+    record_name: 'Record Name',
+    record_name_placeholder: 'Enter record name',
+    record_category: 'Category',
+    duration: 'Duration',
+    hours: 'hours',
+    minutes: 'minutes',
+    date: 'Date',
+    notes_optional: 'Notes (Optional)',
+    notes_placeholder: 'Enter notes',
+    cancel: 'Cancel',
+    save_record: 'Save Record',
+    add_goal_title: 'Add Goal',
+    goal_name: 'Goal Name',
+    goal_name_placeholder: 'Enter goal name',
+    goal_category: 'Category',
+    daily_goal_duration: 'Daily Goal Duration',
+    save_goal: 'Save Goal',
+    confirm_delete: 'Confirm Delete',
+    delete_confirmation: 'Are you sure you want to delete this record? This action cannot be undone.',
+    delete: 'Delete',
+    operation_success: 'Operation successful!',
+    record_updated: 'Record updated',
+    record_added: 'Record added',
+    category_added: 'Category added',
+    category_deleted: 'Category deleted',
+    goal_added: 'Goal added',
+    goal_deleted: 'Goal deleted',
+    no_records_today: 'No records today',
+    click_to_add_record: 'Click "Add Time Record" to start tracking your time',
+    no_goals: 'No goals set yet',
+    click_to_add_goal: 'Click "Add Goal" to set your daily goals',
+    please_enter_name: 'Please enter record name',
+    please_set_duration: 'Please set duration',
+    total_exceeds_18h: 'Total daily time cannot exceed 18 hours',
+    please_enter_category_name: 'Please enter category name',
+    category_already_exists: 'Category already exists',
+    cannot_delete_used_category: 'Cannot delete a category that is in use',
+    please_enter_goal_name: 'Please enter goal name',
+    please_set_goal_duration: 'Please set goal duration'
+  }
+};
+
+// 获取当前语言
+function getCurrentLanguage() {
+  return document.documentElement.getAttribute('data-lang') || 'zh';
+}
+
+// 获取翻译文本
+function t(key) {
+  const lang = getCurrentLanguage();
+  return translations[lang][key] || key;
+}
+
 // DOM元素
 const elements = {
   // 日期选择
@@ -294,8 +423,9 @@ function initializeUI() {
 
 // 更新当前日期显示
 function updateCurrentDateDisplay() {
+  const lang = getCurrentLanguage();
   const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
-  elements.currentDateEl.textContent = currentDate.toLocaleDateString('zh-CN', options);
+  elements.currentDateEl.textContent = currentDate.toLocaleDateString(lang === 'zh' ? 'zh-CN' : 'en-US', options);
 }
 
 // 填充时间选择下拉框
@@ -1012,8 +1142,8 @@ function renderTimeRecords() {
     emptyItem.className = 'text-center py-8 text-gray-500';
     emptyItem.innerHTML = `
       <i class="fa fa-calendar-o text-3xl mb-2"></i>
-      <p>今天还没有记录</p>
-      <p class="text-sm">点击"添加时间记录"开始记录你的时间</p>
+      <p>${t('no_records_today')}</p>
+      <p class="text-sm">${t('click_to_add_record')}</p>
     `;
     elements.timeRecordsList.appendChild(emptyItem);
   } else {
@@ -1124,8 +1254,8 @@ function renderGoals() {
     emptyItem.className = 'text-center py-8 text-gray-500';
     emptyItem.innerHTML = `
       <i class="fa fa-bullseye-o text-3xl mb-2"></i>
-      <p>还没有设置目标</p>
-      <p class="text-sm">点击"添加目标"开始设置你的每日目标</p>
+      <p>${t('no_goals')}</p>
+      <p class="text-sm">${t('click_to_add_goal')}</p>
     `;
     elements.goalsList.appendChild(emptyItem);
   } else {
@@ -1200,15 +1330,21 @@ function showToast(message) {
 
 // 切换主题
 function toggleTheme() {
-  document.body.classList.toggle('dark-mode');
+  const isDarkMode = document.body.classList.toggle('dark-mode');
   
   // 更新图标
   const icon = elements.themeToggle.querySelector('i');
-  if (document.body.classList.contains('dark-mode')) {
+  if (isDarkMode) {
+    // 切换到深色模式
+    document.body.style.backgroundColor = '#000000';
+    document.body.style.backgroundImage = 'none';
     icon.classList.remove('fa-moon-o');
     icon.classList.add('fa-sun-o');
     localStorage.setItem('theme', 'dark');
   } else {
+    // 切换到浅色模式
+    document.body.style.backgroundColor = '#ffffff';
+    document.body.style.backgroundImage = 'linear-gradient(to bottom right, var(--tw-gradient-stops))';
     icon.classList.remove('fa-sun-o');
     icon.classList.add('fa-moon-o');
     localStorage.setItem('theme', 'light');
@@ -1390,6 +1526,69 @@ function loadSavedLanguage() {
     console.warn('无法从本地存储加载语言:', e);
     setLanguage('zh'); // 默认使用中文
   }
+}
+
+// 更新页面文本
+function updatePageText() {
+  // 更新所有带有data-i18n属性的元素
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    el.textContent = t(key);
+  });
+  
+  // 更新其他需要翻译的元素
+  elements.addRecordBtn.innerHTML = `<i class="fa fa-plus mr-2"></i><span>${t('add_record')}</span>`;
+  elements.addGoalBtn.innerHTML = `<i class="fa fa-plus mr-1"></i> ${t('add_goal')}`;
+  
+  // 更新模态框标题和按钮
+  document.querySelector('#add-record-modal h3').textContent = t('add_record_title');
+  document.querySelector('#add-goal-modal h3').textContent = t('add_goal_title');
+  document.querySelector('#confirm-delete-modal h3').textContent = t('confirm_delete');
+  document.querySelector('#confirm-delete-modal p').textContent = t('delete_confirmation');
+  
+  // 更新表单标签和占位符
+  document.querySelector('label[for="record-name"]').textContent = t('record_name');
+  document.querySelector('label[for="record-category"]').textContent = t('record_category');
+  document.querySelector('label[for="record-date"]').textContent = t('date');
+  document.querySelector('label[for="record-notes"]').textContent = t('notes_optional');
+  document.querySelector('label[for="goal-name"]').textContent = t('goal_name');
+  document.querySelector('label[for="goal-category"]').textContent = t('goal_category');
+  
+  document.getElementById('record-name').placeholder = t('record_name_placeholder');
+  document.getElementById('record-notes').placeholder = t('notes_placeholder');
+  document.getElementById('goal-name').placeholder = t('goal_name_placeholder');
+  document.getElementById('new-category-name').placeholder = t('new_category_placeholder');
+  
+  // 更新按钮文本
+  document.getElementById('cancel-record-btn').textContent = t('cancel');
+  document.getElementById('save-record-btn').textContent = t('save_record');
+  document.getElementById('cancel-goal-btn').textContent = t('cancel');
+  document.getElementById('save-goal-btn').textContent = t('save_goal');
+  document.getElementById('cancel-delete-btn').textContent = t('cancel');
+  document.getElementById('confirm-delete-btn').textContent = t('delete');
+  
+  // 更新图表标题
+  document.querySelector('.glass-effect:nth-child(1) h3').innerHTML = `<i class="fa fa-pie-chart text-primary mr-2"></i>${t('time_distribution')}`;
+  document.querySelector('.glass-effect:nth-child(2) h3').innerHTML = `<i class="fa fa-bar-chart text-primary mr-2"></i>${t('trend_analysis')}`;
+  document.querySelector('.glass-effect:nth-child(3) h3').innerHTML = `<i class="fa fa-bullseye text-primary mr-2"></i>${t('goal_tracking')}`;
+  
+  // 更新图表切换按钮
+  document.querySelector('.toggle-btn[data-period="day"]').textContent = t('today');
+  document.querySelector('.toggle-btn[data-period="week"]').textContent = t('this_week');
+  document.querySelector('.toggle-btn[data-period="month"]').textContent = t('this_month');
+  document.querySelector('.toggle-btn[data-trend="week"]').textContent = t('this_week');
+  document.querySelector('.toggle-btn[data-trend="month"]').textContent = t('this_month');
+  document.querySelector('.toggle-btn[data-trend="all"]').textContent = t('all_time');
+  
+  // 更新当前日期显示
+  updateCurrentDateDisplay();
+  
+  // 更新图表
+  updateTimeDistributionChart(document.querySelector('.toggle-btn[data-period].active').dataset.period);
+  updateTrendAnalysisChart(document.querySelector('.toggle-btn[data-trend].active').dataset.trend);
+  
+  // 更新UI
+  updateUI();
 }
 
 // 应用加载完成后初始化
