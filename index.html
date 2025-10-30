@@ -1,429 +1,394 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Time Tracker Pro - 高效管理你的每一分钟</title>
-    <!-- 外部资源 -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
-    
-    <!-- Tailwind 配置 -->
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#6366f1',
-                        secondary: '#8b5cf6',
-                        accent: '#a855f7',
-                        categories: {
-                            work: '#3b82f6',
-                            health: '#10b981',
-                            study: '#f59e0b',
-                            entertainment: '#ec4899',
-                            life: '#6366f1'
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'system-ui', 'sans-serif'],
-                    },
-                    animation: {
-                        'float': 'float 3s ease-in-out infinite',
-                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'fade-in': 'fadeIn 0.5s ease forwards',
-                    },
-                    keyframes: {
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-10px)' },
-                        },
-                        fadeIn: {
-                            '0%': { opacity: '0', transform: 'translateY(10px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' }
-                        }
-                    }
-                }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Time Tracker Pro - 高效管理你的每一分钟</title>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+  <!-- Font Awesome -->
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Tailwind 配置 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#8A2BE2', // 紫色
+            secondary: '#9370DB', // 中紫色
+            accent: '#DDA0DD', // 浅紫色
+            dark: '#1E0033', // 深紫色
+            light: '#F8F4FF', // 浅紫背景
+            work: '#FF6B6B',
+            health: '#4ECDC4',
+            study: '#45B7D1',
+            entertainment: '#FFA07A',
+            life: '#98D8C8'
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+          animation: {
+            'float': 'float 3s ease-in-out infinite',
+            'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'slide-in': 'slideIn 0.5s ease-out forwards',
+            'fade-in': 'fadeIn 0.5s ease-out forwards',
+            'glow': 'glow 2s ease-in-out infinite alternate',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-10px)' },
+            },
+            slideIn: {
+              '0%': { transform: 'translateY(20px)', opacity: '0' },
+              '100%': { transform: 'translateY(0)', opacity: '1' },
+            },
+            fadeIn: {
+              '0%': { opacity: '0' },
+              '100%': { opacity: '1' },
+            },
+            glow: {
+              '0%': { boxShadow: '0 0 5px rgba(138, 43, 226, 0.5)' },
+              '100%': { boxShadow: '0 0 20px rgba(138, 43, 226, 0.8)' },
             }
+          }
         }
-    </script>
-    
-    <!-- 自定义样式 -->
-    <style type="text/tailwindcss">
-        @layer utilities {
-            .content-auto {
-                content-visibility: auto;
-            }
-            .theme-transition {
-                transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-            }
-            .card-hover {
-                transition: all 0.3s ease;
-            }
-            .card-hover:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            }
-            .btn-effect {
-                transition: all 0.3s ease;
-            }
-            .btn-effect:hover {
-                transform: translateY(-2px);
-            }
+      }
+    }
+  </script>
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .glass-effect {
+        @apply bg-white bg-opacity-70 backdrop-blur-md;
+      }
+      .card-hover {
+        @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+      }
+      .btn-gradient {
+        @apply bg-gradient-to-r from-primary to-secondary text-white font-medium py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 relative overflow-hidden;
+      }
+      .btn-gradient::after {
+        content: '';
+        @apply absolute top-0 left-0 w-full h-full bg-white bg-opacity-10 transform -translate-x-full transition-transform duration-500;
+      }
+      .btn-gradient:hover::after {
+        @apply transform translate-x-0;
+      }
+      .input-field {
+        @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300;
+      }
+      .category-badge {
+        @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+      }
+      .progress-bar {
+        @apply h-2 rounded-full overflow-hidden bg-gray-200;
+      }
+      .progress-value {
+        @apply h-full transition-all duration-500 ease-out;
+      }
+      .toggle-btn {
+        @apply px-3 py-1 rounded-md text-sm font-medium transition-all duration-300;
+      }
+      .toggle-btn.active {
+        @apply bg-primary text-white;
+      }
+      .toggle-btn:not(.active) {
+        @apply bg-gray-200 text-gray-700 hover:bg-gray-300;
+      }
+      .animate-float {
+        animation: float 3s ease-in-out infinite;
+      }
+      @keyframes float {
+        0%, 100% {
+          transform: translateY(0);
         }
-    </style>
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+      .animate-glow {
+        animation: glow 2s ease-in-out infinite alternate;
+      }
+      @keyframes glow {
+        0% {
+          box-shadow: 0 0 5px rgba(138, 43, 226, 0.5);
+        }
+        100% {
+          box-shadow: 0 0 20px rgba(138, 43, 226, 0.8);
+        }
+      }
+      .dark-mode {
+        @apply bg-gray-900 text-white;
+      }
+      .dark-card {
+        @apply bg-gray-800 bg-opacity-70 backdrop-blur-md;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
-<body class="min-h-screen bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-100 theme-transition relative">
-    <!-- 装饰图案 -->
-    <div class="fixed inset-0 bg-[radial-gradient(rgba(99,102,241,0.1)_1px,transparent_1px)] bg-[size:30px_30px] pointer-events-none z-0 opacity-50 dark:opacity-30"></div>
-    
-    <!-- 顶部控制区 -->
-    <div class="fixed top-4 right-4 z-50 flex gap-3">
-        <button id="themeToggleEvanBtn" class="w-10 h-10 rounded-full bg-white dark:bg-gray-800 shadow-lg flex items-center justify-center btn-effect">
-            <i class="fa fa-sun-o dark:hidden" aria-hidden="true"></i>
-            <i class="fa fa-moon-o hidden dark:block" aria-hidden="true"></i>
+<body class="bg-gradient-to-br from-light to-white min-h-screen transition-colors duration-500">
+  <!-- 背景装饰 -->
+  <div class="fixed top-0 left-0 w-full h-full overflow-hidden z-0 opacity-10 pointer-events-none">
+    <div class="absolute -top-20 -left-20 w-80 h-80 rounded-full bg-primary blur-3xl"></div>
+    <div class="absolute -bottom-40 -right-40 w-96 h-96 rounded-full bg-secondary blur-3xl"></div>
+    <div class="absolute top-1/3 -right-20 w-60 h-60 rounded-full bg-accent blur-3xl"></div>
+  </div>
+
+  <!-- 页面容器 -->
+  <div class="container mx-auto px-4 py-8 relative z-10 max-w-7xl">
+    <!-- 顶部导航 -->
+    <header class="mb-8 animate-fade-in">
+      <div class="flex justify-between items-center">
+        <div class="flex items-center">
+          <div class="text-primary mr-3 text-3xl">
+            <i class="fa fa-clock-o"></i>
+          </div>
+          <div>
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-800 transition-colors duration-500">Time Tracker Pro</h1>
+            <p class="text-gray-600 transition-colors duration-500">高效管理你的每一分钟</p>
+          </div>
+        </div>
+        <div class="flex items-center space-x-4">
+          <!-- 语言切换 -->
+          <div class="flex items-center bg-white bg-opacity-70 rounded-lg p-1 shadow-sm">
+            <button id="lang-zh" class="px-3 py-1 rounded-md text-sm font-medium bg-primary text-white">中文</button>
+            <button id="lang-en" class="px-3 py-1 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-200">English</button>
+          </div>
+          <!-- 昼夜模式切换 -->
+          <button id="theme-toggle" class="p-2 rounded-full bg-white bg-opacity-70 shadow-sm hover:bg-opacity-100 transition-all duration-300">
+            <i class="fa fa-moon-o text-gray-700"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- 日期选择区 -->
+    <div class="flex justify-between items-center mb-8 animate-slide-in" style="animation-delay: 0.1s">
+      <div class="flex items-center space-x-4">
+        <button id="prev-date" class="p-2 rounded-full bg-white bg-opacity-70 shadow-sm hover:bg-opacity-100 transition-all duration-300">
+          <i class="fa fa-chevron-left text-gray-700"></i>
         </button>
-        <button id="langToggleEvanBtn" class="w-10 h-10 rounded-full bg-white dark:bg-gray-800 shadow-lg flex items-center justify-center btn-effect">
-            <span class="text-sm font-medium" id="currentLangEvan">中</span>
+        <h2 id="current-date" class="text-xl font-semibold text-gray-800 transition-colors duration-500">2025年8月25日 星期一</h2>
+        <button id="next-date" class="p-2 rounded-full bg-white bg-opacity-70 shadow-sm hover:bg-opacity-100 transition-all duration-300">
+          <i class="fa fa-chevron-right text-gray-700"></i>
         </button>
+      </div>
+      <button id="add-record-btn" class="btn-gradient flex items-center">
+        <i class="fa fa-plus mr-2"></i>
+        <span>添加时间记录</span>
+      </button>
     </div>
-    
-    <!-- 通知提示 -->
-    <div id="notification" class="fixed top-20 right-4 max-w-xs p-4 rounded-lg shadow-xl transform translate-x-full transition-transform duration-300 z-50 bg-white dark:bg-gray-800 border-l-4 border-green-500">
-        <div class="flex items-center gap-3">
-            <i class="fa fa-check-circle text-green-500" aria-hidden="true"></i>
-            <span id="notificationText">操作成功！</span>
+
+    <!-- 主体内容 -->
+    <div class="flex flex-col lg:flex-row gap-6 animate-slide-in" style="animation-delay: 0.2s">
+      <!-- 左栏 -->
+      <div class="w-full lg:w-1/3 space-y-6">
+        <!-- 今日时间记录卡片 -->
+        <div class="glass-effect rounded-xl shadow-md p-6 card-hover">
+          <h3 class="text-lg font-semibold mb-4 text-gray-800 transition-colors duration-500 flex items-center">
+            <i class="fa fa-list-alt text-primary mr-2"></i>
+            今日时间记录
+          </h3>
+          <div id="time-records-list" class="space-y-4 max-h-80 overflow-y-auto pr-2">
+            <!-- 时间记录将通过JavaScript动态添加 -->
+          </div>
+          <div class="mt-6 pt-4 border-t border-gray-200 transition-colors duration-500">
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-gray-600 transition-colors duration-500">今日总计</span>
+              <span id="total-time" class="font-semibold text-gray-800 transition-colors duration-500">0小时0分钟</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600 transition-colors duration-500">剩余清醒时间</span>
+              <span id="remaining-time" class="font-semibold text-gray-800 transition-colors duration-500">18小时0分钟</span>
+            </div>
+          </div>
         </div>
+
+        <!-- 类别管理卡片 -->
+        <div class="glass-effect rounded-xl shadow-md p-6 card-hover">
+          <h3 class="text-lg font-semibold mb-4 text-gray-800 transition-colors duration-500 flex items-center">
+            <i class="fa fa-tags text-primary mr-2"></i>
+            类别管理
+          </h3>
+          <div id="categories-list" class="space-y-3">
+            <!-- 类别将通过JavaScript动态添加 -->
+          </div>
+          <div class="mt-4 flex items-center">
+            <input type="text" id="new-category-name" placeholder="输入新类别名称" class="input-field flex-1 mr-2">
+            <input type="color" id="new-category-color" class="w-10 h-10 rounded-full cursor-pointer border-0" value="#8A2BE2">
+            <button id="add-category-btn" class="btn-gradient ml-2">
+              <i class="fa fa-plus"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 右栏 -->
+      <div class="w-full lg:w-2/3 space-y-6">
+        <!-- 时间分配饼图卡片 -->
+        <div class="glass-effect rounded-xl shadow-md p-6 card-hover">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold text-gray-800 transition-colors duration-500 flex items-center">
+              <i class="fa fa-pie-chart text-primary mr-2"></i>
+              时间分配
+            </h3>
+            <div class="flex space-x-2">
+              <button class="toggle-btn active" data-period="day">今日</button>
+              <button class="toggle-btn" data-period="week">本周</button>
+              <button class="toggle-btn" data-period="month">本月</button>
+            </div>
+          </div>
+          <div class="flex flex-col md:flex-row items-center">
+            <div class="w-full md:w-1/2 h-64">
+              <canvas id="time-distribution-chart"></canvas>
+            </div>
+            <div class="w-full md:w-1/2 mt-4 md:mt-0 md:pl-6">
+              <div id="category-distribution-list" class="space-y-3">
+                <!-- 类别分布将通过JavaScript动态添加 -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 趋势分析柱状图卡片 -->
+        <div class="glass-effect rounded-xl shadow-md p-6 card-hover">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold text-gray-800 transition-colors duration-500 flex items-center">
+              <i class="fa fa-bar-chart text-primary mr-2"></i>
+              趋势分析
+            </h3>
+            <div class="flex space-x-2">
+              <button class="toggle-btn active" data-trend="week">本周</button>
+              <button class="toggle-btn" data-trend="month">本月</button>
+              <button class="toggle-btn" data-trend="all">全部</button>
+            </div>
+          </div>
+          <div class="h-80">
+            <canvas id="trend-analysis-chart"></canvas>
+          </div>
+        </div>
+
+        <!-- 目标追踪卡片 -->
+        <div class="glass-effect rounded-xl shadow-md p-6 card-hover">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold text-gray-800 transition-colors duration-500 flex items-center">
+              <i class="fa fa-bullseye text-primary mr-2"></i>
+              目标追踪
+            </h3>
+            <button id="add-goal-btn" class="btn-gradient">
+              <i class="fa fa-plus mr-1"></i> 添加目标
+            </button>
+          </div>
+          <div id="goals-list" class="space-y-4">
+            <!-- 目标将通过JavaScript动态添加 -->
+          </div>
+        </div>
+      </div>
     </div>
-    
-    <!-- 主容器 -->
-    <div class="container mx-auto px-4 py-16 max-w-7xl relative z-10">
-        <!-- 顶部标题区 -->
-        <header class="text-center mb-8 animate-fade-in">
-            <h1 class="text-[clamp(2rem,5vw,3rem)] font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent flex items-center justify-center gap-3">
-                <i class="fa fa-clock-o" aria-hidden="true"></i>
-                <span id="appTitleEvan">Time Tracker Pro</span>
-            </h1>
-            <p class="text-[clamp(1rem,2vw,1.25rem)] text-gray-600 dark:text-gray-300 mt-2" id="appSubtitleEvan">高效管理你的每一分钟</p>
-        </header>
-        
-        <!-- 日期选择区 -->
-        <div class="flex flex-wrap items-center justify-between mb-8 gap-4 animate-fade-in" style="animation-delay: 0.1s">
-            <div class="flex items-center gap-4">
-                <button id="prevDayEvanBtn" class="w-10 h-10 rounded-full bg-white dark:bg-gray-800 shadow-md flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 btn-effect">
-                    <i class="fa fa-chevron-left" aria-hidden="true"></i>
-                </button>
-                <h2 id="currentDateEvan" class="text-[clamp(1.25rem,3vw,1.75rem)] font-semibold">2025年8月25日 星期一</h2>
-                <button id="nextDayEvanBtn" class="w-10 h-10 rounded-full bg-white dark:bg-gray-800 shadow-md flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 btn-effect">
-                    <i class="fa fa-chevron-right" aria-hidden="true"></i>
-                </button>
-            </div>
-            <div class="flex gap-3">
-                <button id="exportDataEvanBtn" class="bg-white dark:bg-gray-800 shadow-md px-4 py-3 rounded-lg font-medium hover:bg-gray-100 dark:hover:bg-gray-700 btn-effect flex items-center gap-2">
-                    <i class="fa fa-download" aria-hidden="true"></i>
-                    <span id="exportBtnTextEvan">导出数据</span>
-                </button>
-                <button id="addRecordEvanBtn" class="bg-gradient-to-r from-primary to-secondary text-white px-6 py-3 rounded-lg font-medium shadow-lg btn-effect flex items-center gap-2">
-                    <i class="fa fa-plus" aria-hidden="true"></i>
-                    <span id="addRecordBtnTextEvan">添加时间记录</span>
-                </button>
-            </div>
+  </div>
+
+  <!-- 添加时间记录模态框 -->
+  <div id="add-record-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+    <div class="bg-white rounded-xl shadow-xl p-6 w-full max-w-md mx-4 transform transition-all duration-300 scale-95 opacity-0" id="modal-content">
+      <h3 class="text-xl font-semibold mb-4 text-gray-800">添加时间记录</h3>
+      <div class="space-y-4">
+        <div>
+          <label for="record-name" class="block text-gray-700 mb-1">事项名称</label>
+          <input type="text" id="record-name" class="input-field" placeholder="请输入事项名称">
         </div>
-        
-        <!-- 主体内容区 -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- 左栏 -->
-            <div class="lg:col-span-1 space-y-6">
-                <!-- 今日时间记录卡片 -->
-                <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg card-hover animate-fade-in" style="animation-delay: 0.2s">
-                    <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
-                        <i class="fa fa-list-alt text-primary" aria-hidden="true"></i>
-                        <span id="todayRecordsTitleEvan">今日时间记录</span>
-                    </h3>
-                    <div id="recordsListEvan" class="space-y-4 max-h-[400px] overflow-y-auto pr-2">
-                        <!-- 记录将通过JS动态生成 -->
-                    </div>
-                    <div class="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
-                        <div class="flex justify-between mb-2">
-                            <span class="font-medium" id="totalTimeLabelEvan">今日总计时间：</span>
-                            <span id="totalTimeEvan" class="font-bold">0小时</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="font-medium" id="remainingTimeLabelEvan">剩余清醒时间：</span>
-                            <span id="remainingTimeEvan" class="font-bold">16小时</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- 类别管理卡片 -->
-                <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg card-hover animate-fade-in" style="animation-delay: 0.3s">
-                    <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
-                        <i class="fa fa-tags text-primary" aria-hidden="true"></i>
-                        <span id="categoriesTitleEvan">类别管理</span>
-                    </h3>
-                    <div id="categoriesListEvan" class="space-y-3 mb-4">
-                        <!-- 类别将通过JS动态生成 -->
-                    </div>
-                    <button id="addCategoryEvanBtn" class="w-full py-2 border border-dashed border-primary text-primary rounded-lg hover:bg-primary/5 transition-colors flex items-center justify-center gap-2">
-                        <i class="fa fa-plus" aria-hidden="true"></i>
-                        <span id="addCategoryBtnTextEvan">添加新类别</span>
-                    </button>
-                </div>
-            </div>
-            
-            <!-- 右栏 -->
-            <div class="lg:col-span-2 space-y-6">
-                <!-- 时间分配饼图卡片 -->
-                <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg card-hover animate-fade-in" style="animation-delay: 0.4s">
-                    <div class="flex flex-wrap items-center justify-between mb-6 gap-2">
-                        <h3 class="text-xl font-bold flex items-center gap-2">
-                            <i class="fa fa-pie-chart text-primary" aria-hidden="true"></i>
-                            <span id="timeDistributionTitleEvan">时间分配</span>
-                        </h3>
-                        <div class="flex border rounded-lg overflow-hidden">
-                            <button class="timeRangeBtnEvan active px-4 py-2 bg-primary text-white" data-range="day">
-                                <span id="rangeDayEvan">今日</span>
-                            </button>
-                            <button class="timeRangeBtnEvan px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors" data-range="week">
-                                <span id="rangeWeekEvan">本周</span>
-                            </button>
-                            <button class="timeRangeBtnEvan px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors" data-range="month">
-                                <span id="rangeMonthEvan">本月</span>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="md:col-span-2 h-[300px]">
-                            <canvas id="timeDistributionChartEvan"></canvas>
-                        </div>
-                        <div class="md:col-span-1 space-y-4 overflow-y-auto max-h-[300px] pr-2">
-                            <div id="categoryDistributionEvan">
-                                <!-- 类别分布将通过JS动态生成 -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- 趋势分析柱状图卡片 -->
-                <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg card-hover animate-fade-in" style="animation-delay: 0.5s">
-                    <div class="flex flex-wrap items-center justify-between mb-6 gap-2">
-                        <h3 class="text-xl font-bold flex items-center gap-2">
-                            <i class="fa fa-bar-chart text-primary" aria-hidden="true"></i>
-                            <span id="trendAnalysisTitleEvan">趋势分析</span>
-                        </h3>
-                        <div class="flex border rounded-lg overflow-hidden">
-                            <button class="trendRangeBtnEvan active px-4 py-2 bg-primary text-white" data-range="week">
-                                <span id="trendWeekEvan">本周</span>
-                            </button>
-                            <button class="trendRangeBtnEvan px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors" data-range="month">
-                                <span id="trendMonthEvan">本月</span>
-                            </button>
-                            <button class="trendRangeBtnEvan px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors" data-range="all">
-                                <span id="trendAllEvan">全部</span>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="h-[300px]">
-                        <canvas id="trendAnalysisChartEvan"></canvas>
-                    </div>
-                </div>
-                
-                <!-- 目标追踪卡片 -->
-                <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg card-hover animate-fade-in" style="animation-delay: 0.6s">
-                    <div class="flex flex-wrap items-center justify-between mb-4 gap-2">
-                        <h3 class="text-xl font-bold flex items-center gap-2">
-                            <i class="fa fa-bullseye text-primary" aria-hidden="true"></i>
-                            <span id="goalsTrackingTitleEvan">目标追踪</span>
-                        </h3>
-                        <button id="addGoalEvanBtn" class="px-4 py-2 border border-dashed border-primary text-primary rounded-lg hover:bg-primary/5 transition-colors flex items-center justify-center gap-2">
-                            <i class="fa fa-plus" aria-hidden="true"></i>
-                            <span id="addGoalBtnTextEvan">添加目标</span>
-                        </button>
-                    </div>
-                    <div id="goalsListEvan" class="space-y-6">
-                        <!-- 目标将通过JS动态生成 -->
-                    </div>
-                </div>
-            </div>
+        <div>
+          <label for="record-category" class="block text-gray-700 mb-1">所属类别</label>
+          <select id="record-category" class="input-field">
+            <!-- 类别选项将通过JavaScript动态添加 -->
+          </select>
         </div>
+        <div>
+          <label class="block text-gray-700 mb-1">时长</label>
+          <div class="flex space-x-2">
+            <select id="record-hours" class="input-field flex-1">
+              <!-- 小时选项将通过JavaScript动态添加 -->
+            </select>
+            <span class="flex items-center">小时</span>
+            <select id="record-minutes" class="input-field flex-1">
+              <!-- 分钟选项将通过JavaScript动态添加 -->
+            </select>
+            <span class="flex items-center">分钟</span>
+          </div>
+        </div>
+        <div>
+          <label for="record-date" class="block text-gray-700 mb-1">日期</label>
+          <input type="date" id="record-date" class="input-field">
+        </div>
+        <div>
+          <label for="record-notes" class="block text-gray-700 mb-1">备注（可选）</label>
+          <textarea id="record-notes" class="input-field" rows="2" placeholder="请输入备注信息"></textarea>
+        </div>
+        <div class="flex justify-end space-x-3 pt-4">
+          <button id="cancel-record-btn" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-300">取消</button>
+          <button id="save-record-btn" class="btn-gradient">保存记录</button>
+        </div>
+      </div>
     </div>
-    
-    <!-- 添加时间记录模态框 -->
-    <div id="addRecordEvanModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 opacity-0 pointer-events-none transition-opacity duration-300">
-        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-md w-full mx-4 transform scale-95 transition-transform duration-300">
-            <h3 class="text-xl font-bold mb-4" id="addRecordModalTitleEvan">添加时间记录</h3>
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" id="recordNameLabelEvan">事项名称</label>
-                    <input type="text" id="recordNameEvan" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none bg-white dark:bg-gray-700 theme-transition" placeholder="输入事项名称">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" id="categoryLabelEvan">所属类别</label>
-                    <select id="categorySelectEvan" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none bg-white dark:bg-gray-700 theme-transition">
-                        <!-- 类别选项将通过JS动态生成 -->
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" id="durationLabelEvan">时长</label>
-                    <div class="flex gap-2">
-                        <select id="hoursEvan" class="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none bg-white dark:bg-gray-700 theme-transition">
-                            <!-- 小时选项将通过JS动态生成 -->
-                        </select>
-                        <span class="flex items-center" id="hoursTextEvan">小时</span>
-                        <select id="minutesEvan" class="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none bg-white dark:bg-gray-700 theme-transition">
-                            <!-- 分钟选项将通过JS动态生成 -->
-                        </select>
-                        <span class="flex items-center" id="minutesTextEvan">分钟</span>
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" id="dateLabelEvan">日期</label>
-                    <input type="text" id="recordDateEvan" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 cursor-not-allowed theme-transition" readonly="">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" id="notesLabelEvan">备注（可选）</label>
-                    <textarea id="recordNotesEvan" rows="3" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none bg-white dark:bg-gray-700 theme-transition" placeholder="输入备注信息"></textarea>
-                </div>
-                <div class="flex gap-3 mt-6">
-                    <button id="recordCancelEvanBtn" class="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors theme-transition">
-                        <span id="cancelBtnTextEvan">取消</span>
-                    </button>
-                    <button id="saveRecordEvanBtn" class="flex-1 px-4 py-3 bg-gradient-to-r from-primary to-secondary text-white rounded-lg font-medium btn-effect">
-                        <span id="saveBtnTextEvan">保存记录</span>
-                    </button>
-                </div>
-            </div>
+  </div>
+
+  <!-- 添加目标模态框 -->
+  <div id="add-goal-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+    <div class="bg-white rounded-xl shadow-xl p-6 w-full max-w-md mx-4 transform transition-all duration-300 scale-95 opacity-0" id="goal-modal-content">
+      <h3 class="text-xl font-semibold mb-4 text-gray-800">添加目标</h3>
+      <div class="space-y-4">
+        <div>
+          <label for="goal-name" class="block text-gray-700 mb-1">目标名称</label>
+          <input type="text" id="goal-name" class="input-field" placeholder="请输入目标名称">
         </div>
-    </div>
-    
-    <!-- 添加类别模态框 -->
-    <div id="addCategoryEvanModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 opacity-0 pointer-events-none transition-opacity duration-300">
-        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-md w-full mx-4 transform scale-95 transition-transform duration-300">
-            <h3 class="text-xl font-bold mb-4" id="addCategoryModalTitleEvan">添加新类别</h3>
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" id="categoryNameLabelEvan">类别名称</label>
-                    <input type="text" id="categoryNameEvan" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none bg-white dark:bg-gray-700 theme-transition" placeholder="输入类别名称">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" id="selectColorLabelEvan">选择颜色</label>
-                    <div class="grid grid-cols-6 gap-2">
-                        <button class="categoryColorBtnEvan w-full aspect-square rounded-full bg-categories-work" data-color="#3b82f6"></button>
-                        <button class="categoryColorBtnEvan w-full aspect-square rounded-full bg-categories-health" data-color="#10b981"></button>
-                        <button class="categoryColorBtnEvan w-full aspect-square rounded-full bg-categories-study" data-color="#f59e0b"></button>
-                        <button class="categoryColorBtnEvan w-full aspect-square rounded-full bg-categories-entertainment" data-color="#ec4899"></button>
-                        <button class="categoryColorBtnEvan w-full aspect-square rounded-full bg-categories-life" data-color="#6366f1"></button>
-                        <button class="categoryColorBtnEvan w-full aspect-square rounded-full bg-purple-900" data-color="#7e22ce"></button>
-                    </div>
-                    <input type="hidden" id="categoryColorEvan" value="#6366f1">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" id="selectIconLabelEvan">选择图标</label>
-                    <div class="grid grid-cols-6 gap-2">
-                        <button class="categoryIconBtnEvan w-full aspect-square rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center" data-icon="briefcase"><i class="fa fa-briefcase text-xl"></i></button>
-                        <button class="categoryIconBtnEvan w-full aspect-square rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center" data-icon="heartbeat"><i class="fa fa-heartbeat text-xl"></i></button>
-                        <button class="categoryIconBtnEvan w-full aspect-square rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center" data-icon="book"><i class="fa fa-book text-xl"></i></button>
-                        <button class="categoryIconBtnEvan w-full aspect-square rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center" data-icon="gamepad"><i class="fa fa-gamepad text-xl"></i></button>
-                        <button class="categoryIconBtnEvan w-full aspect-square rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center" data-icon="home"><i class="fa fa-home text-xl"></i></button>
-                        <button class="categoryIconBtnEvan w-full aspect-square rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center" data-icon="car"><i class="fa fa-car text-xl"></i></button>
-                    </div>
-                    <input type="hidden" id="categoryIconEvan" value="briefcase">
-                </div>
-                <div class="flex gap-3 mt-6">
-                    <button id="categoryCancelEvanBtn" class="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors theme-transition">
-                        <span id="categoryCancelBtnTextEvan">取消</span>
-                    </button>
-                    <button id="saveCategoryEvanBtn" class="flex-1 px-4 py-3 bg-gradient-to-r from-primary to-secondary text-white rounded-lg font-medium btn-effect">
-                        <span id="saveCategoryBtnTextEvan">保存类别</span>
-                    </button>
-                </div>
-            </div>
+        <div>
+          <label for="goal-category" class="block text-gray-700 mb-1">所属类别</label>
+          <select id="goal-category" class="input-field">
+            <!-- 类别选项将通过JavaScript动态添加 -->
+          </select>
         </div>
-    </div>
-    
-    <!-- 添加目标模态框 -->
-    <div id="addGoalEvanModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 opacity-0 pointer-events-none transition-opacity duration-300">
-        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-md w-full mx-4 transform scale-95 transition-transform duration-300">
-            <h3 class="text-xl font-bold mb-4" id="addGoalModalTitleEvan">添加新目标</h3>
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" id="goalNameLabelEvan">目标名称</label>
-                    <input type="text" id="goalNameEvan" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none bg-white dark:bg-gray-700 theme-transition" placeholder="输入目标名称">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" id="goalCategoryLabelEvan">所属类别</label>
-                    <select id="goalCategorySelectEvan" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none bg-white dark:bg-gray-700 theme-transition">
-                        <!-- 类别选项将通过JS动态生成 -->
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" id="dailyGoalHoursLabelEvan">每日目标时长（小时）</label>
-                    <input type="number" id="goalHoursEvan" min="0.5" max="18" step="0.5" value="1" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none bg-white dark:bg-gray-700 theme-transition">
-                </div>
-                <div class="flex gap-3 mt-6">
-                    <button id="goalCancelEvanBtn" class="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors theme-transition">
-                        <span id="goalCancelBtnTextEvan">取消</span>
-                    </button>
-                    <button id="saveGoalEvanBtn" class="flex-1 px-4 py-3 bg-gradient-to-r from-primary to-secondary text-white rounded-lg font-medium btn-effect">
-                        <span id="saveGoalBtnTextEvan">保存目标</span>
-                    </button>
-                </div>
-            </div>
+        <div>
+          <label class="block text-gray-700 mb-1">目标时长（每天）</label>
+          <div class="flex space-x-2">
+            <select id="goal-hours" class="input-field flex-1">
+              <!-- 小时选项将通过JavaScript动态添加 -->
+            </select>
+            <span class="flex items-center">小时</span>
+            <select id="goal-minutes" class="input-field flex-1">
+              <!-- 分钟选项将通过JavaScript动态添加 -->
+            </select>
+            <span class="flex items-center">分钟</span>
+          </div>
         </div>
-    </div>
-    
-    <!-- 导出数据模态框 -->
-    <div id="exportDataEvanModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 opacity-0 pointer-events-none transition-opacity duration-300">
-        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-md w-full mx-4 transform scale-95 transition-transform duration-300">
-            <h3 class="text-xl font-bold mb-4" id="exportDataTitleEvan">导出数据</h3>
-            <p class="text-gray-600 dark:text-gray-400 mb-6" id="exportDataDescEvan">选择导出格式和范围</p>
-            <div class="space-y-4">
-                <button id="exportAllJsonEvanBtn" class="w-full py-3 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center justify-center gap-2 theme-transition">
-                    <i class="fa fa-file-code-o text-gray-700 dark:text-gray-300" aria-hidden="true"></i>
-                    <span id="exportAllJsonTextEvan">导出所有数据（JSON）</span>
-                </button>
-                <button id="exportTodayCsvEvanBtn" class="w-full py-3 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center justify-center gap-2 theme-transition">
-                    <i class="fa fa-file-text-o text-gray-700 dark:text-gray-300" aria-hidden="true"></i>
-                    <span id="exportTodayCsvTextEvan">导出今日记录（CSV）</span>
-                </button>
-                <button id="exportWeekCsvEvanBtn" class="w-full py-3 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center justify-center gap-2 theme-transition">
-                    <i class="fa fa-file-text-o text-gray-700 dark:text-gray-300" aria-hidden="true"></i>
-                    <span id="exportWeekCsvTextEvan">导出本周记录（CSV）</span>
-                </button>
-                <button id="exportCategoryCsvEvanBtn" class="w-full py-3 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center justify-center gap-2 theme-transition">
-                    <i class="fa fa-file-text-o text-gray-700 dark:text-gray-300" aria-hidden="true"></i>
-                    <span id="exportCategoryCsvTextEvan">导出类别分布（CSV）</span>
-                </button>
-            </div>
-            <div class="mt-6">
-                <button id="exportCancelEvanBtn" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors theme-transition">
-                    <span id="exportCancelBtnTextEvan">取消</span>
-                </button>
-            </div>
+        <div class="flex justify-end space-x-3 pt-4">
+          <button id="cancel-goal-btn" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-300">取消</button>
+          <button id="save-goal-btn" class="btn-gradient">保存目标</button>
         </div>
+      </div>
     </div>
-    
-    <!-- 删除确认模态框 -->
-    <div id="deleteConfirmEvanModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 opacity-0 pointer-events-none transition-opacity duration-300">
-        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-md w-full mx-4 transform scale-95 transition-transform duration-300">
-            <h3 class="text-xl font-bold mb-2" id="confirmDeleteTitleEvan">确认删除</h3>
-            <p class="text-gray-600 dark:text-gray-400 mb-6" id="confirmDeleteDescEvan">你确定要删除这个项目吗？此操作无法撤销。</p>
-            <input type="hidden" id="deleteItemIdEvan" value="">
-            <input type="hidden" id="deleteItemTypeEvan" value="">
-            <div class="flex gap-3">
-                <button id="deleteCancelEvanBtn" class="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors theme-transition">
-                    <span id="deleteCancelBtnTextEvan">取消</span>
-                </button>
-                <button id="confirmDeleteEvanBtn" class="flex-1 px-4 py-3 bg-red-500 text-white rounded-lg font-medium hover:bg-red-600 transition-colors btn-effect">
-                    <span id="confirmDeleteBtnTextEvan">确认删除</span>
-                </button>
-            </div>
-        </div>
+  </div>
+
+  <!-- 确认删除模态框 -->
+  <div id="confirm-delete-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+    <div class="bg-white rounded-xl shadow-xl p-6 w-full max-w-md mx-4 transform transition-all duration-300 scale-95 opacity-0" id="delete-modal-content">
+      <h3 class="text-xl font-semibold mb-4 text-gray-800">确认删除</h3>
+      <p class="text-gray-600 mb-6">你确定要删除这条记录吗？此操作无法撤销。</p>
+      <div class="flex justify-end space-x-3">
+        <button id="cancel-delete-btn" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-300">取消</button>
+        <button id="confirm-delete-btn" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-300">删除</button>
+      </div>
     </div>
-    
-    <!-- 核心脚本 -->
-    <script src="app.js"></script>
+  </div>
+
+  <!-- 成功提示 -->
+  <div id="success-toast" class="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg transform translate-x-full transition-transform duration-300 flex items-center">
+    <i class="fa fa-check-circle mr-2"></i>
+    <span id="toast-message">操作成功！</span>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
